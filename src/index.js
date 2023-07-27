@@ -9,6 +9,7 @@ const xss = require("xss-clean"); // prevent Cross-Site Scripting (XSS) attacks.
 const compression = require("./frameworks/web/middlewares/compression");
 const authLimiter = require("./frameworks/web/middlewares/rate.limiter");
 const customLog = require("./frameworks/web/middlewares/logger");
+const errorHandler = require("./frameworks/web/middlewares/error.handler");
 const app = express();
 app.set("trust proxy", true);
 //Custom Http logging console and local
@@ -24,6 +25,8 @@ app.use(xss());
 app.use(express.json());
 app.use(cookieParser());
 
+//error will be handled here
+app.use(errorHandler);
 // Database connection setup
 connectDB();
 
