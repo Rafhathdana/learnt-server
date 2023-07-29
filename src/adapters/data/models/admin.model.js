@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
-const { TUTORS } = require("../../../frameworks/database/collection");
-const tutorSchema = new mongoose.Schema([
+const { ADMINS } = require("../../../frameworks/database/collection");
+const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -23,14 +23,6 @@ const tutorSchema = new mongoose.Schema([
       required: true,
       unique: true,
     },
-    about: String,
-    website: String,
-    age: Number,
-    address: String,
-    gitLink: String,
-    linkedinLink: String,
-    occupation: String,
-    skills: Array,
     enrolledCourse: [{ type: mongoose.Schema.Types.ObjectId, ref: "courses" }],
     isBlocked: {
       type: Boolean,
@@ -40,6 +32,6 @@ const tutorSchema = new mongoose.Schema([
   },
   {
     timestamps: true,
-  },
-]);
-module.exports = mongoose.model(TUTORS, tutorSchema);
+  }
+);
+module.exports = mongoose.model(ADMINS, userSchema);

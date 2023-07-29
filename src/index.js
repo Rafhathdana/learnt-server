@@ -34,7 +34,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Application Routes
-app.use("/api", require("./router"));
+app.use("/api", require("./adapters/router"));
 
 //unnessary route will be given 404 error
 app.use("*", (req, res) => {
@@ -45,10 +45,6 @@ app.use(errorHandler);
 // Database connection setup
 connectDB();
 
-// Sample route for testing the server
-app.get("/", (req, res) => {
-  res.send("Hello from the backend!");
-});
 const server = app.listen(process.env.PORT, () => {
   console.log(`server started at port${process.env.PORT}`);
 });

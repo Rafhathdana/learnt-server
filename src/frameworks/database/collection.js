@@ -1,6 +1,7 @@
 const COLLECTION_NAMES = {
   USERS: "users",
   TUTORS: "tutors",
+  ADMINS: "admins",
   COURSES: "courses",
   LESSONS: "lessons",
   CATEGORIES: "categories",

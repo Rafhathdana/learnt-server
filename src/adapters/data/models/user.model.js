@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const { USERS } = require("../../../frameworks/database/collection");
 const userSchema = new mongoose.Schema(
   {
     name: {
@@ -24,7 +25,6 @@ const userSchema = new mongoose.Schema(
     },
     about: String,
     website: String,
-    lastName: String,
     age: Number,
     address: String,
     gitLink: String,
@@ -43,11 +43,11 @@ const userSchema = new mongoose.Schema(
     //     },
     //   },
     // ],
-    occupation:String,
+    occupation: String,
     token: Array,
   },
   {
     timestamps: true,
   }
 );
-module.exports = mongoose.model("users", userSchema);
+module.exports = mongoose.model(USERS, userSchema);
