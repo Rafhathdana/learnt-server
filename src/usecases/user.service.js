@@ -71,6 +71,7 @@ const handleSignUp = async ({ name, password, phone, email }) => {
   });
   return user;
 };
+
 module.exports = {
   handleSignIn,
   handleSignUp,
