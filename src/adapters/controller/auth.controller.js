@@ -38,6 +38,7 @@ const handleSignUp = asyncHandler(async (req, res) => {
   if (error) {
     throw AppError.validation(error.details[0].message);
   }
+  console.log("rafhathdel");
   const user = await userService.handleSignUp(value);
   console.log(
     "New User has been registered -",
@@ -48,6 +49,13 @@ const handleSignUp = asyncHandler(async (req, res) => {
     value.phone
   );
   return res.status(200).json({ message: "Account created successfully" });
+});
+const handleSignOtp = asyncHandler(async (req, res) => {
+  const { error, value } = signUpSchema.validate(req.body);
+  if (error) {
+    throw AppError.validation(error.details[0].message);
+  }
+  const user = await userService.handleSignUp(value);
 });
 module.exports = {
   handleSignIn,

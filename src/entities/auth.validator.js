@@ -1,7 +1,7 @@
-const Jio = require("jio");
+const Joi = require("joi");
 
-const signInSchema = Jio.object({
-  email: Jio.string()
+const signInSchema = Joi.object({
+  email: Joi.string()
     .email({
       minDomainSegments: 2,
       tlds: { allow: ["com", "net"] },
@@ -13,7 +13,7 @@ const signInSchema = Jio.object({
       "string.email": "Email should be a valid email address",
       "any.required": "Email is required",
     }),
-  password: Jio.string()
+  password: Joi.string()
     .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$"))
     .required()
     .messages({
@@ -32,7 +32,7 @@ const signUpSchema = Joi.object({
     "string.alphanum": "Name should only contain alpha-numeric characters",
     "any.required": `'name' is a required field`,
   }),
-  email: Jio.string()
+  email: Joi.string()
     .email({
       minDomainSegments: 2,
       tlds: { allow: ["com", "net"] },

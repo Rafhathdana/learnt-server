@@ -48,11 +48,26 @@ const handleSignUp = async ({ name, password, phone, email }) => {
     throw AppError.conflict("Phone Number is already taken");
   }
   const hashedPassword = await createHashPassword(password);
+  let username = email.split("@")[0];
+  const isUsernameUnique = await userRepository.findUserByUserName(username);
+
+  // Check if the username is already unique
+  if (isUsernameUnique) {
+    // If the username is not unique, add a numeric suffix to make it unique
+    let suffix = 1;
+    username = username + suffix;
+    while (await userRepository.findUserByUserName(username)) {
+      suffix++;
+      username = username + suffix;
+    }
+  }
+  console.log(username);
   const user = await userRepository.createUser({
     name,
     password: hashedPassword,
     phone,
     email,
+    username,
   });
   return user;
 };

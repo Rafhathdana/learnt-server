@@ -16,6 +16,7 @@ const findUserByEmail = async (email) =>
     );
 const findUserByPhone = async (phone) => await User.findOne({ phone });
 const findUserById = async (_id) => await User.findOne({ _id });
+const findUserByUserName = async (username) => await User.findOne({ username });
 const findUserByToken = async (token) => {
   const userData = User.findOne({ token }).select({
     email: 1,
@@ -28,18 +29,21 @@ const checkIsBlocked = async (email) => {
   const user = await User.findOne({ email }).select({ isBlocked: 1 });
   return User.isBlocked;
 };
-const createUser = ({ name, password, phone, email }) => {
+const createUser = ({ name, password, phone, email, username }) => {
+  console.log(username);
   const user = new User({
     name,
     email,
     phone,
     password,
+    username
   });
+
   return user
     .save()
     .then((response) => response)
     .catch((error) => {
-      console.log("Error saving user data");
+      console.log("Error saving user data to database - ", error);
       throw new AppError.database(
         "An error occured while processing your data"
       );
@@ -53,4 +57,5 @@ module.exports = {
   findUserByToken,
   checkIsBlocked,
   findUserById,
+  findUserByUserName,
 };
