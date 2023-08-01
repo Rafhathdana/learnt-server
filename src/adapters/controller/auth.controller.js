@@ -1,4 +1,8 @@
-const { signUpSchema, signInSchema } = require("../../entities/auth.validator");
+const {
+  signUpSchema,
+  signInSchema,
+  signUpSchemaWithOTP,
+} = require("../../entities/auth.validator");
 const userService = require("../../usecases/user.service");
 const AppError = require("../../frameworks/web/utils/app.error.util");
 const asyncHandler = require("../../frameworks/web/utils/async.handler.util");
@@ -17,7 +21,7 @@ const asyncHandler = require("../../frameworks/web/utils/async.handler.util");
 const handleSignIn = asyncHandler(async (req, res) => {
   const { error, value } = signInSchema.validate(req.body);
   if (error) {
-    console.log(errors);
+    console.log(error);
     throw AppError.validation(error.details[0].message);
   }
   const { user, accessToken, refreshToken } = await userService.handleSignIn(
@@ -34,11 +38,10 @@ const handleSignIn = asyncHandler(async (req, res) => {
  * @access public
  */
 const handleSignUp = asyncHandler(async (req, res) => {
-  const { error, value } = signUpSchema.validate(req.body);
+  const { error, value } = signUpSchemaWithOTP.validate(req.body);
   if (error) {
     throw AppError.validation(error.details[0].message);
   }
-  console.log("rafhathdel");
   const user = await userService.handleSignUp(value);
   console.log(
     "New User has been registered -",
@@ -55,9 +58,12 @@ const handleSignOtp = asyncHandler(async (req, res) => {
   if (error) {
     throw AppError.validation(error.details[0].message);
   }
-  const user = await userService.handleSignUp(value);
+  console.log("rafhath reached here");
+  const otp = await userService.handleSignUpOtp(value);
+  return res.status(200).json({ message: "Otp send successfully" });
 });
 module.exports = {
   handleSignIn,
   handleSignUp,
+  handleSignOtp,
 };

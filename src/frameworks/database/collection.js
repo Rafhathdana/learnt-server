@@ -1,4 +1,5 @@
 const COLLECTION_NAMES = {
+  OTPTEMP: "otptemp",
   USERS: "users",
   TUTORS: "tutors",
   ADMINS: "admins",

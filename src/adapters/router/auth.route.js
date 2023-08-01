@@ -8,5 +8,6 @@ const authController = require("../controller/auth.controller");
 
 router.route("/signin").post(authController.handleSignIn);
 router.route("/signup").post(authController.handleSignUp);
+router.route("/sendotp").post(authController.handleSignOtp);
 
 module.exports = router;

@@ -22,7 +22,6 @@ app.use(compression);
 app.use(mongoSanitize());
 // protect against Cross-Site Scripting (XSS) attacks
 app.use(xss());
-
 // security feature to control how web pages in one domain can request and access resources
 app.use(cors(corsOptions));
 

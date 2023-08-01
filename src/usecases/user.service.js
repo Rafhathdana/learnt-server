@@ -1,3 +1,4 @@
+const otpRepository = require("../adapters/gateway/common.repository");
 const userRepository = require("../adapters/gateway/user.repository");
 const AppError = require("../frameworks/web/utils/app.error.util");
 const verifyToken = require("../frameworks/web/utils/auth.util");
@@ -5,6 +6,7 @@ const {
   comparePasswords,
   createHashPassword,
 } = require("../frameworks/web/utils/bcrypt.util");
+const { generateOTP } = require("../frameworks/web/utils/generate.otp.util");
 const {
   createAccessToken,
   createRefreshToken,
@@ -38,7 +40,15 @@ const handleSignIn = async ({ email, password }) => {
     refreshToken,
   };
 };
-const handleSignUp = async ({ name, password, phone, email }) => {
+const handleSignUp = async ({ name, password, phone, email, otp }) => {
+  const isPhoneOtp = await otpRepository.findOtpByPhone(phone);
+  if (!isPhoneOtp) {
+    throw AppError.conflict("Try Again Otp TimeOut");
+  }
+  console.log(isPhoneOtp.otp, otp);
+  if (isPhoneOtp.otp != otp) {
+    throw AppError.conflict("Otp is Not Correct Try Again");
+  }
   const isEmailTaken = await userRepository.findUserByEmail(email);
   if (isEmailTaken) {
     throw AppError.conflict("Email is already taken");
@@ -71,8 +81,43 @@ const handleSignUp = async ({ name, password, phone, email }) => {
   });
   return user;
 };
-
+const handleSignUpOtp = async ({ email, phone }) => {
+  console.log("rafhath raf");
+  const isEmailTaken = await userRepository.findUserByEmail(email);
+  if (isEmailTaken) {
+    throw AppError.conflict("Email is already taken");
+  }
+  const isPhoneTaken = await userRepository.findUserByPhone(phone);
+  if (isPhoneTaken) {
+    throw AppError.conflict("Phone Number is already taken");
+  }
+  const isPhoneOtp = await otpRepository.findOtpByPhone(phone);
+  let count = 0;
+  let otp = generateOTP(6);
+  console.log(otp);
+  if (isPhoneOtp) {
+    console.log(otp);
+    if (isPhoneOtp.count > 6) {
+      throw AppError.conflict("Done maximum otp on this Number");
+    }
+    console.log(isPhoneOtp, otp);
+    isPhoneOtp.otp = otp;
+    const user = await otpRepository.updateOtp({
+      isPhoneOtp,
+    });
+    return user;
+  } else {
+    console.log(otp);
+    const user = await otpRepository.createOtp({
+      phone,
+      email,
+      otp,
+    });
+    return user;
+  }
+};
 module.exports = {
   handleSignIn,
   handleSignUp,
+  handleSignUpOtp,
 };

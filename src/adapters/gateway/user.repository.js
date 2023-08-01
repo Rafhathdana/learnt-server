@@ -25,6 +25,7 @@ const findUserByToken = async (token) => {
   });
   return userData;
 };
+
 const checkIsBlocked = async (email) => {
   const user = await User.findOne({ email }).select({ isBlocked: 1 });
   return User.isBlocked;
@@ -36,7 +37,7 @@ const createUser = ({ name, password, phone, email, username }) => {
     email,
     phone,
     password,
-    username
+    username,
   });
 
   return user
