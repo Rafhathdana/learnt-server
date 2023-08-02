@@ -6,6 +6,7 @@ const {
 const userService = require("../../usecases/user.service");
 const AppError = require("../../frameworks/web/utils/app.error.util");
 const asyncHandler = require("../../frameworks/web/utils/async.handler.util");
+const attachTokenToCookie = require("../../frameworks/web/utils/cookie.util");
 /**
  * @desc User Sign in
  * @route POST /auth/signin/

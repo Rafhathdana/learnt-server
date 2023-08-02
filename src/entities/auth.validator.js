@@ -14,13 +14,12 @@ const signInSchema = Joi.object({
       "any.required": "Email is required",
     }),
   password: Joi.string()
-    .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$"))
+    // .pattern(new RegExp("^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9]).{6,}$"))
     .required()
     .messages({
       "string.base": "Password. should be a type of text",
       "string.empty": "Password is required",
-      "string.pattern.base":
-        "Password should contain at least one uppercase letter,one lowercase letter , one digit, and be at least 6 characters long",
+      // "string.pattern.base": "Password should contain at least one uppercase letter,one lowercase letter , one digit, and be at least 6 characters long",
     }),
 });
 const signUpSchema = Joi.object({

@@ -50,6 +50,9 @@ const createUser = ({ name, password, phone, email, username }) => {
       );
     });
 };
+const addRefreshTokenById = async (_id, token) => {
+  await User.updateOne({ _id }, { $push: { token } });
+};
 
 module.exports = {
   createUser,
@@ -59,4 +62,5 @@ module.exports = {
   checkIsBlocked,
   findUserById,
   findUserByUserName,
+  addRefreshTokenById,
 };

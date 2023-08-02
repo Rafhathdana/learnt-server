@@ -10,3 +10,4 @@ attachTokenToCookie = (cookieName, Token, res) => {
     maxAge: 24 * 60 * 60 * 1000,
   });
 };
+module.exports = attachTokenToCookie;
