@@ -1,5 +1,5 @@
 const otpRepository = require("../adapters/gateway/common.repository");
-const userRepository = require("../adapters/gateway/user.repository");
+const tutorRepository = require("../adapters/gateway/tutor.repository");
 const AppError = require("../frameworks/web/utils/app.error.util");
 const verifyToken = require("../frameworks/web/utils/auth.util");
 const {
@@ -12,30 +12,30 @@ const {
   createRefreshToken,
 } = require("../frameworks/web/utils/generate.tokens.util");
 /**
- * Handles user sign-in
- * @param {Object} credentials - User credentials. {email: string, password: string}
- * @returns {Promise<Object>} - Object with user data, access token, and refresh token.
+ * Handles tutor sign-in
+ * @param {Object} credentials - Tutor credentials. {email: string, password: string}
+ * @returns {Promise<Object>} - Object with tutor data, access token, and refresh token.
  */
 const handleSignIn = async ({ email, password }) => {
-  let user = await userRepository.findUserByEmail(email);
-  if (!user) throw AppError.validation("Email not registered");
+  let tutor = await tutorRepository.findTutorByEmail(email);
+  if (!tutor) throw AppError.validation("Email not registered");
 
-  const isPasswordMatch = await comparePasswords(password, user.password);
+  const isPasswordMatch = await comparePasswords(password, tutor.password);
   if (!isPasswordMatch) throw AppError.validation("Invalid Password");
 
-  const isBlocked = await userRepository.checkIsBlocked(email);
+  const isBlocked = await tutorRepository.checkIsBlocked(email);
   if (isBlocked) throw AppError.forbidden("Access denied");
 
-  const { password: _, ...userWithoutPassword } = user.toObject();
+  const { password: _, ...tutorWithoutPassword } = tutor.toObject();
 
-  const accessToken = createAccessToken(userWithoutPassword);
-  const refreshToken = createRefreshToken(userWithoutPassword);
+  const accessToken = createAccessToken(tutorWithoutPassword, "tutor");
+  const refreshToken = createRefreshToken(tutorWithoutPassword);
 
   // commented until until database refresh token cleanUp is implemented
-  await userRepository.addRefreshTokenById(user._id, refreshToken);
+  await tutorRepository.addRefreshTokenById(tutor._id, refreshToken);
 
   return {
-    user: userWithoutPassword,
+    tutorData: tutorWithoutPassword,
     accessToken,
     refreshToken,
   };
@@ -49,44 +49,46 @@ const handleSignUp = async ({ name, password, phone, email, otp }) => {
   if (isPhoneOtp.otp != otp) {
     throw AppError.conflict("Otp is Not Correct Try Again");
   }
-  const isEmailTaken = await userRepository.findUserByEmail(email);
+  const isEmailTaken = await tutorRepository.findTutorByEmail(email);
   if (isEmailTaken) {
     throw AppError.conflict("Email is already taken");
   }
-  const isPhoneTaken = await userRepository.findUserByPhone(phone);
+  const isPhoneTaken = await tutorRepository.findTutorByPhone(phone);
   if (isPhoneTaken) {
     throw AppError.conflict("Phone Number is already taken");
   }
   const hashedPassword = await createHashPassword(password);
-  let username = email.split("@")[0];
-  const isUsernameUnique = await userRepository.findUserByUserName(username);
+  let tutorname = email.split("@")[0];
+  const isTutornameUnique = await tutorRepository.findTutorByTutorName(
+    tutorname
+  );
 
-  // Check if the username is already unique
-  if (isUsernameUnique) {
-    // If the username is not unique, add a numeric suffix to make it unique
+  // Check if the tutorname is already unique
+  if (isTutornameUnique) {
+    // If the tutorname is not unique, add a numeric suffix to make it unique
     let suffix = 1;
-    username = username + suffix;
-    while (await userRepository.findUserByUserName(username)) {
+    tutorname = tutorname + suffix;
+    while (await tutorRepository.findTutorByTutorName(tutorname)) {
       suffix++;
-      username = username + suffix;
+      tutorname = tutorname + suffix;
     }
   }
-  console.log(username);
-  const user = await userRepository.createUser({
+  console.log(tutorname);
+  const tutor = await tutorRepository.createTutor({
     name,
     password: hashedPassword,
     phone,
     email,
-    username,
+    tutorname,
   });
-  return user;
+  return tutor;
 };
 const handleSignUpOtp = async ({ email, phone }) => {
-  const isEmailTaken = await userRepository.findUserByEmail(email);
+  const isEmailTaken = await tutorRepository.findTutorByEmail(email);
   if (isEmailTaken) {
     throw AppError.conflict("Email is already taken");
   }
-  const isPhoneTaken = await userRepository.findUserByPhone(phone);
+  const isPhoneTaken = await tutorRepository.findTutorByPhone(phone);
   if (isPhoneTaken) {
     throw AppError.conflict("Phone Number is already taken");
   }
@@ -98,17 +100,18 @@ const handleSignUpOtp = async ({ email, phone }) => {
       throw AppError.conflict("Done maximum otp on this Number");
     }
     isPhoneOtp.otp = otp;
-    const user = await otpRepository.updateOtp({
+    isPhoneOtp.count += 1;
+    const tutor = await otpRepository.updateOtp({
       isPhoneOtp,
     });
-    return user;
+    return tutor;
   } else {
-    const user = await otpRepository.createOtp({
+    const tutor = await otpRepository.createOtp({
       phone,
       email,
       otp,
     });
-    return user;
+    return tutor;
   }
 };
 module.exports = {

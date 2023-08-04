@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const { TUTORS } = require("../../../frameworks/database/collection");
-const tutorSchema = new mongoose.Schema([
+const tutorSchema = new mongoose.Schema(
   {
     name: {
       type: String,
@@ -17,8 +17,9 @@ const tutorSchema = new mongoose.Schema([
     phone: {
       type: String,
       required: true,
+      unique: true,
     },
-    username: {
+    tutorname: {
       type: String,
       required: true,
       unique: true,
@@ -40,6 +41,6 @@ const tutorSchema = new mongoose.Schema([
   },
   {
     timestamps: true,
-  },
-]);
+  }
+);
 module.exports = mongoose.model(TUTORS, tutorSchema);

@@ -30,11 +30,10 @@ const createOtp = ({ email, phone, otp, count = 0 }) => {
       );
     });
 };
-const updateOtp = ({ isPhoneOtp }) => {
-  isPhoneOtp.count = isPhoneOtp.count + 1; // Increment count by the 'count' parameter
+const updateOtp = ({ isPhoneOtp }) => {// Increment count by the 'count' parameter
   // Assuming 'OTP' is a function that returns a promise with 'otptemp' value
   return OTP(isPhoneOtp.phone, isPhoneOtp.otp) // Assuming 'data.phone' contains the user's phone number
-    .then((isPhoneOtp) => {
+    .then(() => {
       return Otptemp.findOneAndUpdate(
         { phone: isPhoneOtp.phone },
         { $set: { count: isPhoneOtp.count, otp: isPhoneOtp.otp } },
