@@ -18,12 +18,11 @@ const userSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
-    username: {
+    adminname: {
       type: String,
       required: true,
       unique: true,
     },
-    enrolledCourse: [{ type: mongoose.Schema.Types.ObjectId, ref: "courses" }],
     isBlocked: {
       type: Boolean,
       default: false,

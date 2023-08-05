@@ -24,7 +24,7 @@ const {
       return res.status(400).json({ message: error.details[0].message });
     }
     const { adminData, accessToken, refreshToken } =
-      await adminService.handleSignIn(value);
+    await adminService.handleSignIn(value);
     attachTokenToCookie("accessTokenAdmin", accessToken, res);
     attachTokenToCookie("refreshTokenAdmin", refreshToken, res);
     res.status(200).json({ message: "Login successfull", admin: adminData });

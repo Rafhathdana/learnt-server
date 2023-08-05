@@ -55,6 +55,13 @@ const addRefreshTokenById = async (_id, token) => {
   await Tutor.updateOne({ _id }, { $push: { token } });
 };
 
+const findByTokenAndDelete = async (token) => {
+  const isTokenPresent = await User.findOneAndUpdate(
+    { token },
+    { $pull: { token } }
+  );
+  return isTokenPresent;
+};
 module.exports = {
   createTutor,
   findTutorByEmail,
@@ -64,4 +71,5 @@ module.exports = {
   findTutorById,
   findTutorByTutorName,
   addRefreshTokenById,
+  findByTokenAndDelete,
 };

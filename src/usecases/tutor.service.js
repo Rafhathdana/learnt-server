@@ -114,8 +114,44 @@ const handleSignUpOtp = async ({ email, phone }) => {
     return tutor;
   }
 };
+
+const getTutorFromToken = async (accessToken) => {
+  return verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET)
+    .then(
+      async (data) => await tutorRepository.findTutorByEmail(data?.user.email)
+    )
+    .catch((err) => {
+      console.log("error while decoding access token", err);
+      return false;
+    });
+};
+const getAccessTokenByRefreshToken = async (refreshToken) => {
+  const user = await tutorRepository.findTutorByToken(refreshToken);
+  if (!user) {
+    throw AppError.authentication("Invalid refresh token! please login again");
+  }
+
+  return verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+    .then((data) => {
+      const accessToken = createAccessToken(data);
+      return accessToken;
+    })
+    .catch((err) => {
+      console.log("error verifying refresh token - ", err);
+      throw AppError.authentication(err.message);
+    });
+};
+const checkTokenAndDelete = async (token) => {
+  // const isTokenPresent = User.findOneAndUpdate({ token }, { $pull: { token } })
+  const isTokenPresent = tutorRepository.findByTokenAndDelete(token);
+  return isTokenPresent;
+};
+
 module.exports = {
   handleSignIn,
   handleSignUp,
   handleSignUpOtp,
+  getTutorFromToken,
+  getAccessTokenByRefreshToken,
+  checkTokenAndDelete,
 };

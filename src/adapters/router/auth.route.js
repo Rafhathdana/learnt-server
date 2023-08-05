@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const authController = require("../controller/auth.controller");
 const authTutorController = require("../controller/auth.tutor.controller");
+const authAdminController = require("../controller/auth.admin.controller");
 /**
  * @desc User Authentcion routes
  * @route /api/auth/
@@ -10,6 +11,11 @@ const authTutorController = require("../controller/auth.tutor.controller");
 router.route("/signin").post(authController.handleSignIn);
 router.route("/signup").post(authController.handleSignUp);
 router.route("/sendotp").post(authController.handleSignOtp);
+router.route("/user/restore").get(authController.restoreUserDetails);
+router.route("/token").get(authController.refreshToken);
+
+router.route("/logout").delete(authController.handleLogout);
+
 /**
  * @desc tutor Authentication
  * @route /api/auth/tutor
@@ -18,6 +24,10 @@ router.route("/sendotp").post(authController.handleSignOtp);
 router.route("/tutor/signin").post(authTutorController.handleSignIn);
 router.route("/tutor/signup").post(authTutorController.handleSignUp);
 router.route("/tutor/sendotp").post(authTutorController.handleSignOtp);
+router.route("/user/restore").get(authTutorController.restoreUserDetails);
+router.route("/token").get(authTutorController.refreshToken);
+router.route("/tutor/logout").delete(authTutorController.handleLogout);
+
 /**
  * @desc admin Authentication
  * @route /api/auth/admin

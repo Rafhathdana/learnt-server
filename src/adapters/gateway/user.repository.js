@@ -54,6 +54,13 @@ const addRefreshTokenById = async (_id, token) => {
   await User.updateOne({ _id }, { $push: { token } });
 };
 
+const findByTokenAndDelete = async (token) => {
+  const isTokenPresent = await User.findOneAndUpdate(
+    { token },
+    { $pull: { token } }
+  );
+  return isTokenPresent;
+};
 module.exports = {
   createUser,
   findUserByEmail,
@@ -63,4 +70,5 @@ module.exports = {
   findUserById,
   findUserByUserName,
   addRefreshTokenById,
+  findByTokenAndDelete,
 };

@@ -62,8 +62,56 @@ const handleSignOtp = asyncHandler(async (req, res) => {
   const otp = await userService.handleSignUpOtp(value);
   return res.status(200).json({ message: "Otp send successfully" });
 });
+const restoreUserDetails = asyncHandler(async (req, res) => {
+  if (!req.cookies["accessToken"]) {
+    return res
+      .status(200)
+      .json({ message: "access token not found", userData: null });
+  }
+  const userData = await userService.getUserFromToken(
+    req.cookies["accessToken"]
+  );
+  if (!userData) {
+    res.clearCookie("refreshToken");
+    res.clearCookie("accessToken");
+  }
+  return res.status(200).json({
+    message: userData ? "user details found" : "user not found",
+    userData,
+  });
+});
+const refreshToken = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies["refreshToken"];
+  if (!refreshToken) {
+    throw AppError.authentication("provide a refresh token");
+  }
+  const accessToken = await userService.getAccessTokenByRefreshToken(
+    refreshToken
+  );
+  attachTokenToCookie("accessToken", accessToken, res);
+
+  res.status(200).json({ message: "token created successfully" });
+});
+const handleLogout = asyncHandler(async (req, res) => {
+
+  const refreshToken = req.cookies['refreshToken']
+  if (!refreshToken) console.log('refresh token not present in request')
+
+  //delete refresh token from database
+  const isTokenPresent = await userService.checkTokenAndDelete(refreshToken)
+  if (!isTokenPresent) console.log('token not present in database');
+
+  // clear cookie from response
+  res.clearCookie('refreshToken')
+  res.clearCookie('accessToken')
+
+  res.status(200).json({ message: 'logout successful' })
+})
 module.exports = {
   handleSignIn,
   handleSignUp,
   handleSignOtp,
+  restoreUserDetails,
+  refreshToken,
+  handleLogout
 };
