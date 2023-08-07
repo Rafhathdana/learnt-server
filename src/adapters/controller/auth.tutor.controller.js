@@ -12,7 +12,7 @@ const asyncHandler = require("../../frameworks/web/utils/async.handler.util");
  *
  * @body
  * {
- *   "email": "user@gmail.com",
+ *   "email": "tutor@gmail.com",
  *   "password": "password123"
  * }
  */
@@ -23,10 +23,12 @@ const handleSignIn = asyncHandler(async (req, res) => {
     console.log(error);
     return res.status(400).json({ message: error.details[0].message });
   }
-  const { tutorData, accessToken, refreshToken } =
+  const { tutorData, accessTokenTutor, refreshTokenTutor } =
     await tutorService.handleSignIn(value);
-  attachTokenToCookie("accessTokenTutor", accessToken, res);
-  attachTokenToCookie("refreshTokenTutor", refreshToken, res);
+  console.log(accessTokenTutor, "fdvc");
+  console.log(refreshTokenTutor, "fdvc");
+  attachTokenToCookie("accessTokenTutor", accessTokenTutor, res);
+  attachTokenToCookie("refreshTokenTutor", refreshTokenTutor, res);
   res.status(200).json({ message: "Login successfull", tutor: tutorData });
 });
 /**
@@ -53,55 +55,54 @@ const handleSignOtp = asyncHandler(async (req, res) => {
 });
 
 const restoreUserDetails = asyncHandler(async (req, res) => {
-    if (!req.cookies["accessToken"]) {
-      return res
-        .status(200)
-        .json({ message: "access token not found", userData: null });
-    }
-    const userData = await tutorService.getFromToken(
-      req.cookies["accessToken"]
-    );
-    if (!userData) {
-      res.clearCookie("refreshToken");
-      res.clearCookie("accessToken");
-    }
-    return res.status(200).json({
-      message: userData ? "user details found" : "user not found",
-      userData,
-    });
+  if (!req.cookies["accessTokenTutor"]) {
+    return res
+      .status(200)
+      .json({ message: "access token not found", tutorData: null });
+  }
+  const tutorData = await tutorService.getTutorFromToken(
+    req.cookies["accessTokenTutor"]
+  );
+  if (!tutorData) {
+    res.clearCookie("refreshTokenTutor");
+    res.clearCookie("accessTokenTutor");
+  }
+  return res.status(200).json({
+    message: tutorData ? "tutor details found" : "tutor not found",
+    tutorData,
   });
-  const refreshToken = asyncHandler(async (req, res) => {
-    const refreshToken = req.cookies["refreshToken"];
-    if (!refreshToken) {
-      throw AppError.authentication("provide a refresh token");
-    }
-    const accessToken = await tutorService.getAccessTokenByRefreshToken(
-      refreshToken
-    );
-    attachTokenToCookie("accessToken", accessToken, res);
-  
-    res.status(200).json({ message: "token created successfully" });
-  });
-  const handleLogout = asyncHandler(async (req, res) => {
-  
-    const refreshToken = req.cookies['refreshToken']
-    if (!refreshToken) console.log('refresh token not present in request')
-  
-    //delete refresh token from database
-    const isTokenPresent = await tutorService.checkTokenAndDelete(refreshToken)
-    if (!isTokenPresent) console.log('token not present in database');
-  
-    // clear cookie from response
-    res.clearCookie('refreshToken')
-    res.clearCookie('accessToken')
-  
-    res.status(200).json({ message: 'logout successful' })
-  })
+});
+const refreshToken = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies["refreshTokenTutor"];
+  if (!refreshToken) {
+    throw AppError.authentication("provide a refresh token");
+  }
+  const accessToken = await tutorService.getAccessTokenByRefreshToken(
+    refreshToken
+  );
+  attachTokenToCookie("accessTokenTutor", accessToken, res);
+
+  res.status(200).json({ message: "token created successfully" });
+});
+const handleLogout = asyncHandler(async (req, res) => {
+  const refreshToken = req.cookies["refreshTokenTutor"];
+  if (!refreshToken) console.log("refresh token not present in request");
+
+  //delete refresh token from database
+  const isTokenPresent = await tutorService.checkTokenAndDelete(refreshToken);
+  if (!isTokenPresent) console.log("token not present in database");
+
+  // clear cookie from response
+  res.clearCookie("refreshTokenTutor");
+  res.clearCookie("accessTokenTutor");
+
+  res.status(200).json({ message: "logout successful" });
+});
 module.exports = {
   handleSignIn,
   handleSignUp,
   handleSignOtp,
   handleLogout,
   refreshToken,
-  restoreUserDetails
+  restoreUserDetails,
 };

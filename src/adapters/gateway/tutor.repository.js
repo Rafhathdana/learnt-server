@@ -56,7 +56,7 @@ const addRefreshTokenById = async (_id, token) => {
 };
 
 const findByTokenAndDelete = async (token) => {
-  const isTokenPresent = await User.findOneAndUpdate(
+  const isTokenPresent = await Tutor.findOneAndUpdate(
     { token },
     { $pull: { token } }
   );

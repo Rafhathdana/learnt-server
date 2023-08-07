@@ -63,10 +63,10 @@ const handleSignOtp = asyncHandler(async (req, res) => {
   return res.status(200).json({ message: "Otp send successfully" });
 });
 const restoreUserDetails = asyncHandler(async (req, res) => {
-  if (!req.cookies["accessToken"]) {
+  if (!req.cookies["refreshToken"]) {
     return res
       .status(200)
-      .json({ message: "access token not found", userData: null });
+      .json({ message: "refresh token not found", userData: null });
   }
   const userData = await userService.getUserFromToken(
     req.cookies["accessToken"]
@@ -93,25 +93,24 @@ const refreshToken = asyncHandler(async (req, res) => {
   res.status(200).json({ message: "token created successfully" });
 });
 const handleLogout = asyncHandler(async (req, res) => {
-
-  const refreshToken = req.cookies['refreshToken']
-  if (!refreshToken) console.log('refresh token not present in request')
+  const refreshToken = req.cookies["refreshToken"];
+  if (!refreshToken) console.log("refresh token not present in request");
 
   //delete refresh token from database
-  const isTokenPresent = await userService.checkTokenAndDelete(refreshToken)
-  if (!isTokenPresent) console.log('token not present in database');
+  const isTokenPresent = await userService.checkTokenAndDelete(refreshToken);
+  if (!isTokenPresent) console.log("token not present in database");
 
   // clear cookie from response
-  res.clearCookie('refreshToken')
-  res.clearCookie('accessToken')
+  res.clearCookie("refreshToken");
+  res.clearCookie("accessToken");
 
-  res.status(200).json({ message: 'logout successful' })
-})
+  res.status(200).json({ message: "logout successful" });
+});
 module.exports = {
   handleSignIn,
   handleSignUp,
   handleSignOtp,
   restoreUserDetails,
   refreshToken,
-  handleLogout
+  handleLogout,
 };

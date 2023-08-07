@@ -28,7 +28,11 @@ const handleSignIn = async ({ email, password }) => {
 
   const { password: _, ...adminWithoutPassword } = admin.toObject();
 
-  const accessToken = createAccessToken(adminWithoutPassword, "admin");
+  const accessToken = createAccessToken(
+    adminWithoutPassword,
+    (tutorBool = false),
+    (adminBool = true)
+  );
   const refreshToken = createRefreshToken(adminWithoutPassword);
 
   // commented until until database refresh token cleanUp is implemented

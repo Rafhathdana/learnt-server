@@ -19,25 +19,29 @@ const {
 const handleSignIn = async ({ email, password }) => {
   let tutor = await tutorRepository.findTutorByEmail(email);
   if (!tutor) throw AppError.validation("Email not registered");
-
+  console.log(tutor, "efdvs");
   const isPasswordMatch = await comparePasswords(password, tutor.password);
   if (!isPasswordMatch) throw AppError.validation("Invalid Password");
+  console.log(isPasswordMatch, "efderwfcdszvs");
 
   const isBlocked = await tutorRepository.checkIsBlocked(email);
   if (isBlocked) throw AppError.forbidden("Access denied");
+  console.log(isBlocked, "edcsdvs");
 
   const { password: _, ...tutorWithoutPassword } = tutor.toObject();
-
-  const accessToken = createAccessToken(tutorWithoutPassword, "tutor");
-  const refreshToken = createRefreshToken(tutorWithoutPassword);
-
+  console.log(password, "dfsvc");
+  const accessTokenTutor = createAccessToken(
+    tutorWithoutPassword,
+    (tutorBool = true)
+  );
+  const refreshTokenTutor = createRefreshToken(tutorWithoutPassword);
   // commented until until database refresh token cleanUp is implemented
-  await tutorRepository.addRefreshTokenById(tutor._id, refreshToken);
+  await tutorRepository.addRefreshTokenById(tutor._id, refreshTokenTutor);
 
   return {
     tutorData: tutorWithoutPassword,
-    accessToken,
-    refreshToken,
+    accessTokenTutor,
+    refreshTokenTutor,
   };
 };
 const handleSignUp = async ({ name, password, phone, email, otp }) => {
@@ -115,8 +119,8 @@ const handleSignUpOtp = async ({ email, phone }) => {
   }
 };
 
-const getTutorFromToken = async (accessToken) => {
-  return verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET)
+const getTutorFromToken = async (accessTokenTutor) => {
+  return verifyToken(accessTokenTutor, process.env.ACCESS_TOKEN_SECRET)
     .then(
       async (data) => await tutorRepository.findTutorByEmail(data?.user.email)
     )
@@ -125,16 +129,16 @@ const getTutorFromToken = async (accessToken) => {
       return false;
     });
 };
-const getAccessTokenByRefreshToken = async (refreshToken) => {
-  const user = await tutorRepository.findTutorByToken(refreshToken);
+const getAccessTokenByRefreshToken = async (refreshTokenTutor) => {
+  const user = await tutorRepository.findTutorByToken(refreshTokenTutor);
   if (!user) {
     throw AppError.authentication("Invalid refresh token! please login again");
   }
 
-  return verifyToken(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+  return verifyToken(refreshTokenTutor, process.env.REFRESH_TOKEN_SECRET)
     .then((data) => {
-      const accessToken = createAccessToken(data);
-      return accessToken;
+      const accessTokenTutor = createAccessToken(data);
+      return accessTokenTutor;
     })
     .catch((err) => {
       console.log("error verifying refresh token - ", err);
@@ -146,7 +150,6 @@ const checkTokenAndDelete = async (token) => {
   const isTokenPresent = tutorRepository.findByTokenAndDelete(token);
   return isTokenPresent;
 };
-
 module.exports = {
   handleSignIn,
   handleSignUp,

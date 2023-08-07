@@ -24,8 +24,8 @@ router.route("/logout").delete(authController.handleLogout);
 router.route("/tutor/signin").post(authTutorController.handleSignIn);
 router.route("/tutor/signup").post(authTutorController.handleSignUp);
 router.route("/tutor/sendotp").post(authTutorController.handleSignOtp);
-router.route("/user/restore").get(authTutorController.restoreUserDetails);
-router.route("/token").get(authTutorController.refreshToken);
+router.route("/tutor/restore").get(authTutorController.restoreUserDetails);
+router.route("/tutor/token").get(authTutorController.refreshToken);
 router.route("/tutor/logout").delete(authTutorController.handleLogout);
 
 /**
