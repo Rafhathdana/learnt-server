@@ -1,8 +1,9 @@
 const AppError = require("../../frameworks/web/utils/app.error.util");
-const verifyToken = require("../utils/auth.util");
+const verifyToken = require("../../frameworks/web/utils/auth.util");
 const isAuthAdmin = async (req, res, next) => {
   console.log("\nadmin isAuth Middleware accessed");
   const accessToken = req.cookies["accessTokenAdmin"];
+  console.log("rbvfdcs");
   if (!accessToken) return res.status(400).json({ err: "token is missing" });
   verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET)
     .then((response) => {
@@ -18,7 +19,7 @@ const isAuthAdmin = async (req, res, next) => {
       console.error("token error");
       if (err?.name == "TokenExpiredError") console.log("token expired");
       else console.log(err);
-      throw AppError.authentication(err?.message);
+      throw AppError.authentication(err?.message)
     });
 };
 module.exports = isAuthAdmin;

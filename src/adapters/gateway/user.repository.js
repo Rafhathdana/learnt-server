@@ -61,6 +61,36 @@ const findByTokenAndDelete = async (token) => {
   );
   return isTokenPresent;
 };
+
+const getAllUsers = async () => {
+  const users = await User.find();
+  return users;
+};
+const blockUserById = async (_id) => {
+  const isBlocked = await User.updateOne({ _id }, { isBlocked: true });
+  return isBlocked;
+};
+const unblockUserById = async (_id) => {
+  const isBlocked = await User.updateOne({ _id }, { isBlocked: false });
+  return isBlocked;
+};
+const updateDetailsById = async (user) => {
+  const updatedUser = await User.updateOne(
+    { _id: user._id },
+    {
+      name: user.name,
+      age: user.age,
+      website: user.website,
+      about: user.about,
+      address: user.address,
+      gitLink: user.gitLink,
+      linkedinLink: user.linkedinLink,
+      occupation: user.occupation,
+      visible: user.visible,
+    }
+  );
+  return updatedUser;
+};
 module.exports = {
   createUser,
   findUserByEmail,
@@ -71,4 +101,8 @@ module.exports = {
   findUserByUserName,
   addRefreshTokenById,
   findByTokenAndDelete,
+  getAllUsers,
+  blockUserById,
+  unblockUserById,
+  updateDetailsById,
 };

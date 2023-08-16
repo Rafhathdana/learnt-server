@@ -62,6 +62,37 @@ const findByTokenAndDelete = async (token) => {
   );
   return isTokenPresent;
 };
+
+const getAllTutors = async () => {
+  const tutors = await Tutor.find();
+  return tutors;
+};
+const blockTutorById = async (_id) => {
+  const isBlocked = await Tutor.updateOne({ _id }, { isBlocked: true });
+  return isBlocked;
+};
+const unblockTutorById = async (_id) => {
+  const isBlocked = await Tutor.updateOne({ _id }, { isBlocked: false });
+  return isBlocked;
+};
+const updateDetailsById = async (tutor) => {
+  const updatedTutor = await Tutor.updateOne(
+    { _id: tutor._id },
+    {
+      name: tutor.name,
+      age: tutor.age,
+      website: tutor.website,
+      about: tutor.about,
+      address: tutor.address,
+      gitLink: tutor.gitLink,
+      linkedinLink: tutor.linkedinLink,
+      occupation: tutor.occupation,
+      qualification: tutor.qualification,
+      skills: tutor.skills,
+    }
+  );
+  return updatedTutor;
+};
 module.exports = {
   createTutor,
   findTutorByEmail,
@@ -72,4 +103,8 @@ module.exports = {
   findTutorByTutorName,
   addRefreshTokenById,
   findByTokenAndDelete,
+  getAllTutors,
+  blockTutorById,
+  unblockTutorById,
+  updateDetailsById,
 };

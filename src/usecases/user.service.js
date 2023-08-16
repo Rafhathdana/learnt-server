@@ -142,6 +142,35 @@ const checkTokenAndDelete = async (token) => {
   const isTokenPresent = userRepository.findByTokenAndDelete(token);
   return isTokenPresent;
 };
+const getAllUsers = async () => {
+  const users = await userRepository.getAllUsers();
+  return users;
+};
+const blockUser = async (userId) => {
+  const isBlocked = await userRepository.blockUserById(userId);
+  return isBlocked;
+};
+const unblockUser = async (userId) => {
+  const isBlocked = await userRepository.unblockUserById(userId);
+  return isBlocked;
+};
+const getUserDetails = async (userId) => {
+  const userDetails = await userRepository.findUserById(userId);
+  if (!userDetails) {
+    throw AppError.validation("User Details was not found in database");
+  }
+  return userDetails;
+};
+const updateUserDetails = async (userDetails) => {
+  const updatedUserDetails = await userRepository.updateDetailsById(
+    userDetails
+  );
+  console.log(
+    `user details updated for ${userDetails.name} : ${updatedUserDetails} and ${updatedUserDetails.visible}`
+  );
+
+  return updatedUserDetails;
+};
 
 module.exports = {
   handleSignIn,
@@ -150,4 +179,9 @@ module.exports = {
   getUserFromToken,
   getAccessTokenByRefreshToken,
   checkTokenAndDelete,
+  getAllUsers,
+  blockUser,
+  unblockUser,
+  getUserDetails,
+  updateUserDetails,
 };

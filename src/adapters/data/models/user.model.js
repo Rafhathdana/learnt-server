@@ -45,6 +45,10 @@ const userSchema = new mongoose.Schema(
     // ],
     occupation: String,
     token: Array,
+    visible: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

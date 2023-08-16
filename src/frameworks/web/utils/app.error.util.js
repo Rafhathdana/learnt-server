@@ -59,5 +59,8 @@ class AppError extends Error {
       StatusCodes.INTERNAL_SERVER_ERROR
     );
   }
+  static testError(message = "This is an test error") {
+    return new AppError("1000", message, 400);
+  }
 }
 module.exports = AppError;

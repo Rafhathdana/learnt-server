@@ -1,5 +1,5 @@
 const AppError = require("../../frameworks/web/utils/app.error.util");
-const verifyToken = require("../utils/auth.util");
+const verifyToken = require("../../frameworks/web/utils/auth.util");
 const isAuthTutor = async (req, res, next) => {
   console.log("\ntutor isAuth Middleware accessed");
   const accessToken = req.cookies["accessTokenTutor"];

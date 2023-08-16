@@ -1,4 +1,8 @@
-const { s3Client, PutObjectCommand } = require("@aws-sdk/client-s3");
+const {
+  PutObjectCommand,
+  S3Client,
+  GetObjectCommand,
+} = require("@aws-sdk/client-s3");
 const { getSignedUrl } = require("@aws-sdk/s3-request-presigner");
 const accessKey = process.env.AWS_S3_ACCESS_KEY_ID;
 const secretAccessKey = process.env.AWS_S3_SECRET_ACCESS_KEY;
@@ -27,10 +31,12 @@ const attachThumbnailURLToCourses = async (courses) => {
   return courses;
 };
 const uploadThumbnailToBucket = async (course, thumbnail) => {
+  console.log("fvdhxsn");
   const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
   const courseTitleWithoutSpaces = course.title.trim().replace(/ /g, "-");
   const extension = thumbnail.mimetype.split("/")[1];
   const fileName = `thumbnail/${courseTitleWithoutSpaces}-${uniqueSuffix}-${extension}`;
+  console.log(fileName);
   const params = {
     Bucket: bucketName,
     Key: fileName,
@@ -46,7 +52,7 @@ const uploadThumbnailToBucket = async (course, thumbnail) => {
     },
   };
   const command = new PutObjectCommand(params);
-  s3.send(cpmmand)
+  s3.send(command)
     .then((response) =>
       console.log("Thumbnail uploaded to s3 bucket successfully.")
     )
@@ -54,6 +60,28 @@ const uploadThumbnailToBucket = async (course, thumbnail) => {
       console.log("error while uploading thumbnail to s3" + error);
       return false;
     });
-  return filename;
+  return fileName;
 };
-const getThumbnailURL = async () => {};
+const getThumbnailURL = async (imageName) => {
+  if (process.env.FAKE_BUCKET) {
+    console.count("Faked Thumbnail Url");
+    return "https://i.ytimg.com/vi/pN6jk0uUrD8/mqdefault.jpg";
+  }
+  if (process.env.DATA_STORAGE == "s3bucket") {
+    console.log(imageName);
+    const imageUrl = await getSignedUrl(
+      s3,
+      new GetObjectCommand({ Bucket: bucketName, key: imageName }),
+      {
+        expiresIn: 6000 * 10,
+      }
+    );
+  }
+  console.log(imageUrl);
+  return imageUrl;
+};
+module.exports = {
+  uploadThumbnailToBucket,
+  getThumbnailURL,
+  attachThumbnailURLToCourses,
+};

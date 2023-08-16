@@ -36,4 +36,8 @@ router.route("/tutor/logout").delete(authTutorController.handleLogout);
 router.route("/admin/signin").post(authAdminController.handleSignIn);
 router.route("/admin/signup").post(authAdminController.handleSignUp);
 router.route("/admin/sendotp").post(authAdminController.handleSignOtp);
+router.route("/admin/restore").get(authAdminController.restoreAdminDetails);
+router.route("/admin/token").get(authAdminController.refreshToken);
+
+router.route("/admin/logout").delete(authAdminController.handleLogout);
 module.exports = router;

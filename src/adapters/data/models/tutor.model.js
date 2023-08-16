@@ -31,8 +31,9 @@ const tutorSchema = new mongoose.Schema(
     gitLink: String,
     linkedinLink: String,
     occupation: String,
-    skills: Array,
-    enrolledCourse: [{ type: mongoose.Schema.Types.ObjectId, ref: "courses" }],
+    qualification: String,
+    skills: String,
+    createdCourse: [{ type: mongoose.Schema.Types.ObjectId, ref: "courses" }],
     isBlocked: {
       type: Boolean,
       default: false,

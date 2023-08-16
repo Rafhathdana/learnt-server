@@ -30,7 +30,7 @@ const handleSignIn = async ({ email, password }) => {
 
   const accessToken = createAccessToken(
     adminWithoutPassword,
-    (tutorBool = false),
+    (adminBool = false),
     (adminBool = true)
   );
   const refreshToken = createRefreshToken(adminWithoutPassword);
@@ -118,8 +118,43 @@ const handleSignUpOtp = async ({ email, phone }) => {
     return admin;
   }
 };
+
+const getAdminFromToken = async (accessTokenAdmin) => {
+  return verifyToken(accessTokenAdmin, process.env.ACCESS_TOKEN_SECRET)
+    .then(
+      async (data) => await adminRepository.findAdminByEmail(data?.user.email)
+    )
+    .catch((err) => {
+      console.log("error while decoding access token", err);
+      return false;
+    });
+};
+const getAccessTokenByRefreshToken = async (refreshTokenAdmin) => {
+  const user = await adminRepository.findAdminByToken(refreshTokenAdmin);
+  if (!user) {
+    throw AppError.authentication("Invalid refresh token! please login again");
+  }
+
+  return verifyToken(refreshTokenAdmin, process.env.REFRESH_TOKEN_SECRET)
+    .then((data) => {
+      const accessTokenAdmin = createAccessToken(data);
+      return accessTokenAdmin;
+    })
+    .catch((err) => {
+      console.log("error verifying refresh token - ", err);
+      throw AppError.authentication(err.message);
+    });
+};
+const checkTokenAndDelete = async (token) => {
+  // const isTokenPresent = User.findOneAndUpdate({ token }, { $pull: { token } })
+  const isTokenPresent = adminRepository.findByTokenAndDelete(token);
+  return isTokenPresent;
+};
 module.exports = {
   handleSignIn,
   handleSignUp,
   handleSignUpOtp,
+  getAdminFromToken,
+  getAccessTokenByRefreshToken,
+  checkTokenAndDelete,
 };

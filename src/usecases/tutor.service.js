@@ -130,8 +130,8 @@ const getTutorFromToken = async (accessTokenTutor) => {
     });
 };
 const getAccessTokenByRefreshToken = async (refreshTokenTutor) => {
-  const user = await tutorRepository.findTutorByToken(refreshTokenTutor);
-  if (!user) {
+  const tutor = await tutorRepository.findTutorByToken(refreshTokenTutor);
+  if (!tutor) {
     throw AppError.authentication("Invalid refresh token! please login again");
   }
 
@@ -146,9 +146,38 @@ const getAccessTokenByRefreshToken = async (refreshTokenTutor) => {
     });
 };
 const checkTokenAndDelete = async (token) => {
-  // const isTokenPresent = User.findOneAndUpdate({ token }, { $pull: { token } })
+  // const isTokenPresent = Tutor.findOneAndUpdate({ token }, { $pull: { token } })
   const isTokenPresent = tutorRepository.findByTokenAndDelete(token);
   return isTokenPresent;
+};
+const getAllTutors = async () => {
+  const tutors = await tutorRepository.getAllTutors();
+  return tutors;
+};
+const blockTutor = async (tutorId) => {
+  const isBlocked = await tutorRepository.blockTutorById(tutorId);
+  return isBlocked;
+};
+const unblockTutor = async (tutorId) => {
+  const isBlocked = await tutorRepository.unblockTutorById(tutorId);
+  return isBlocked;
+};
+const getTutorDetails = async (tutorId) => {
+  const tutorDetails = await tutorRepository.findTutorById(tutorId);
+  if (!tutorDetails) {
+    throw AppError.validation("Tutor Details was not found in database");
+  }
+  return tutorDetails;
+};
+const updateTutorDetails = async (tutorDetails) => {
+  const updatedTutorDetails = await tutorRepository.updateDetailsById(
+    tutorDetails
+  );
+  console.log(
+    `tutor details updated for ${tutorDetails.name} : ${updatedTutorDetails} and ${updatedTutorDetails.visible}`
+  );
+
+  return updatedTutorDetails;
 };
 module.exports = {
   handleSignIn,
@@ -157,4 +186,9 @@ module.exports = {
   getTutorFromToken,
   getAccessTokenByRefreshToken,
   checkTokenAndDelete,
+  getAllTutors,
+  blockTutor,
+  unblockTutor,
+  getTutorDetails,
+  updateTutorDetails,
 };

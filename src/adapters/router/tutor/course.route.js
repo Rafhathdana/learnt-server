@@ -3,5 +3,14 @@ const multer = require("multer");
 
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
-const isAuthTutor=require('../../middleware/tutor.auth')
-router.route('/create').post(isAuthTutor,upload.single("thumbnail"))
+const courseContoller = require("../../controller/course.controller");
+const isAuthTutor = require("../../middleware/tutor.auth");
+router
+  .route("/create")
+  .post(
+    isAuthTutor,
+    upload.single("thumbnail"),
+    courseContoller.handleCourseCreate
+  );
+router.route("/").get(isAuthTutor, courseContoller.getAllCourseByTutor);
+module.exports = router;

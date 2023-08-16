@@ -1,4 +1,4 @@
-const { Scheme, model } = require("mongoose");
+const { model, Schema } = require("mongoose");
 const { TUTORS, LESSONS } = require("../../../frameworks/database/collection");
 
 const courseSchema = new Schema(
