@@ -17,7 +17,12 @@ const getAllCourseByTutor = async (req, res) => {
   const courses = await courseService.getAllCourseByTutor(req?.tutor._id);
   return res.status(200).json({ message: "courses found", data: courses });
 };
+const getSpecificCourse = async (req, res) => {
+  const course = await courseService.getCourseDetails(req.params.id);
+  res.status(200).json({ message: "course Found", data: course });
+};
 module.exports = {
   handleCourseCreate,
   getAllCourseByTutor,
+  getSpecificCourse,
 };

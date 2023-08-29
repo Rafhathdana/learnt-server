@@ -1,8 +1,8 @@
 const router = require("express").Router();
-const userController = require("../../controller/user.controller");
+const tutorController = require("../../controller/tutor.controller");
 const isAuthAdmin = require("../../middleware/admin.auth");
 
-router.route("/").get(isAuthAdmin, userController.getAllUsers);
-router.route("/block").post(isAuthAdmin, userController.blockUser);
-router.route("/unblock").post(isAuthAdmin, userController.unblockUser);
+router.route("/").get(isAuthAdmin, tutorController.getAllTutors);
+router.route("/block").post(isAuthAdmin, tutorController.blockTutor);
+router.route("/unblock").post(isAuthAdmin, tutorController.unblockTutor);
 module.exports = router;

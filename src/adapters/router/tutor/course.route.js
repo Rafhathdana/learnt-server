@@ -13,4 +13,5 @@ router
     courseContoller.handleCourseCreate
   );
 router.route("/").get(isAuthTutor, courseContoller.getAllCourseByTutor);
+router.route("/:id").all(isAuthTutor).get(courseContoller.getSpecificCourse);
 module.exports = router;

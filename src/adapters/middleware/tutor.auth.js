@@ -3,7 +3,9 @@ const verifyToken = require("../../frameworks/web/utils/auth.util");
 const isAuthTutor = async (req, res, next) => {
   console.log("\ntutor isAuth Middleware accessed");
   const accessToken = req.cookies["accessTokenTutor"];
-  if (!accessToken) return res.status(400).json({ err: "token is missing" });
+  const refreshToken = req.cookies["refreshTokenTutor"];
+  if (!accessToken && !refreshToken)
+    return res.status(400).json({ err: "token is missing" });
   verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET)
     .then((response) => {
       if (response.user.role !== "tutor") {
@@ -18,6 +20,7 @@ const isAuthTutor = async (req, res, next) => {
       console.error("token error");
       if (err?.name == "TokenExpiredError") console.log("token expired");
       else console.log(err);
+      return res.status(403).json({ messsage: "Not Authorized" });
       throw AppError.authentication(err?.message);
     });
 };

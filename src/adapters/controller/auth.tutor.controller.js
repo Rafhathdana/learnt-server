@@ -55,11 +55,22 @@ const handleSignOtp = asyncHandler(async (req, res) => {
 });
 
 const restoreUserDetails = asyncHandler(async (req, res) => {
-  if (!req.cookies["accessTokenTutor"]) {
+  if (!req.cookies["accessTokenTutor"] && req.cookies["refressTokenTutor"]) {
+    const refreshToken = req.cookies["refreshTokenTutor"];
+    if (!refreshToken) {
+      throw AppError.authentication("provide a refresh token");
+    }
+    const accessToken = await tutorService.getAccessTokenByRefreshToken(
+      refreshToken
+    );
+    attachTokenToCookie("accessTokenTutor", accessToken, res);
+  }
+  if (!req.cookies["accessTokenTutor"] && !req.cookies["refressTokenTutor"]) {
     return res
       .status(200)
       .json({ message: "access token not found", tutorData: null });
   }
+
   const tutorData = await tutorService.getTutorFromToken(
     req.cookies["accessTokenTutor"]
   );

@@ -5,7 +5,7 @@ const {
   LESSONS,
 } = require("../../../frameworks/database/collection");
 
-const lessonScheme = new SchemaType(
+const lessonScheme = new Schema(
   {
     title: {
       type: String,

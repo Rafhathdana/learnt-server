@@ -28,7 +28,25 @@ const getCoursesByTutorId = async (tutorId) => {
   });
   return courses;
 };
+const getCourseById = async (courseId) => {
+  const courses = await Course.findOne({ _id: courseId })
+    // .populate("lessons")
+    .populate("tutor", "name")
+    .catch((err) => {
+      console.log(err);
+    });
+  return courses;
+};
+const addLessonToCourse = async (lessonId, courseId) => {
+  await Course.findOneAndUpdate(
+    { _id: courseId },
+    { $push: { lessons: lessonId } }
+  );
+  return true;
+};
 module.exports = {
   createCourse,
   getCoursesByTutorId,
+  getCourseById,
+  addLessonToCourse,
 };

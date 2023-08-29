@@ -9,11 +9,11 @@ const getAllTutors = async (req, res) => {
   return res.status(200).json({ message: "tutors found", data: tutors });
 };
 const blockTutor = async (req, res) => {
-  const isBlocked = await tutorService.blockTutor(req.body.tutorId);
+  const isBlocked = await tutorService.blockTutor(req.body.userId);
   return res.status(200).json({ message: "Tutor Blocked Successfully" });
 };
 const unblockTutor = async (req, res) => {
-  const isBlocked = await tutorService.unblockTutor(req.body.tutorId);
+  const isBlocked = await tutorService.unblockTutor(req.body.userId);
   return res.status(200).json({ message: "Tutor unBlocked successfully" });
 };
 const getTutorDetails = asyncHandler(async (req, res) => {

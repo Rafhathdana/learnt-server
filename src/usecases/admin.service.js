@@ -37,7 +37,7 @@ const handleSignIn = async ({ email, password }) => {
 
   // commented until until database refresh token cleanUp is implemented
   await adminRepository.addRefreshTokenById(admin._id, refreshToken);
-
+  console.log(adminWithoutPassword);
   return {
     adminData: adminWithoutPassword,
     accessToken,

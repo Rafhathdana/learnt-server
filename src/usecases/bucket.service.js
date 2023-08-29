@@ -35,7 +35,7 @@ const uploadThumbnailToBucket = async (course, thumbnail) => {
   const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
   const courseTitleWithoutSpaces = course.title.trim().replace(/ /g, "-");
   const extension = thumbnail.mimetype.split("/")[1];
-  const fileName = `thumbnail/${courseTitleWithoutSpaces}-${uniqueSuffix}-${extension}`;
+  const fileName = `thumbnail/${courseTitleWithoutSpaces}-${uniqueSuffix}.${extension}`;
   console.log(fileName);
   const params = {
     Bucket: bucketName,
@@ -69,19 +69,81 @@ const getThumbnailURL = async (imageName) => {
   }
   if (process.env.DATA_STORAGE == "s3bucket") {
     console.log(imageName);
-    const imageUrl = await getSignedUrl(
-      s3,
-      new GetObjectCommand({ Bucket: bucketName, key: imageName }),
-      {
-        expiresIn: 6000 * 10,
-      }
-    );
+    let imageUrl;
+    try {
+      imageUrl = await getSignedUrl(
+        s3,
+        new GetObjectCommand({
+          Bucket: bucketName,
+          key: imageName,
+        }),
+        {
+          expiresIn: 6000 * 10,
+        }
+      );
+      console.log(imageUrl);
+      return imageUrl;
+    } catch (e) {
+      console.log(imageUrl);
+      console.log(e);
+    }
+    console.log(imageUrl);
   }
-  console.log(imageUrl);
-  return imageUrl;
+};
+const uploadLesson = async (lesson) => {
+  const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
+  const lessonTitleWithoutSpaces = lesson.date.title.trim().replace(/ /g, "-");
+  const extension = lesson.file.mimetype.split("/")[1];
+  const fileName = `lesson/${lessonTitleWithoutSpaces}-${uniqueSuffix}.${extension}`;
+  const params = {
+    Bucket: bucketName,
+    Key: fileName,
+    Body: lesson.file.buffer,
+    ContentType: lesson.file.mimetype,
+    Metadata: {
+      course: lesson.data.title.toString(),
+      tutor: lesson.tutor.name,
+      originalName: lesson.file.originalname.toString(),
+      originalSize: lesson.file.size.toString(),
+      time: new Date()
+        .toLocaleString("en-US", { timeZone: "Asia/Kolkata" })
+        .toString(),
+    },
+  };
+
+  console.log(params);
+
+  const command = new PutObjectCommand(params);
+
+  await s3.send(command).catch((error) => {
+    console.log("error while uploading thumbnail to s3" + error);
+    return false;
+  });
+
+  return fileName;
+};
+const getVideoURL = async (videoName) => {
+  if (process.env.FAKE_BUCKET) {
+    console.log("Faked Video url");
+    return "http://clips.vorwaerts-gmbh.de/VfE.ogv";
+  }
+  if (process.env.DATA_STORAGE == "s3bucket") {
+    console.count("GET Request send to S3");
+    const videoURL = await getSignedUrl(
+      s3,
+      new GetObjectCommand({
+        Bucket: bucketName,
+        key: videoName,
+      }),
+      { expiresIn: 60 * 60 * 60 }
+    );
+    return videoURL;
+  }
 };
 module.exports = {
   uploadThumbnailToBucket,
   getThumbnailURL,
   attachThumbnailURLToCourses,
+  uploadLesson,
+  getVideoURL,
 };

@@ -31,10 +31,25 @@ const getAllCourseByTutor = async (tutorId) => {
     courses[i].thumbnailURL = await bucketService.getThumbnailURL(
       courses[i].thumbnail
     );
+    console.log("gvjhbkn");
   }
   return courses;
+};
+const getCourseDetails = async (courseId) => {
+  let course = await courseRepository.getCourseById(courseId);
+  course = course.toObject();
+  console.log("gfxcvbn ");
+  course.thumbnail = await bucketService.getThumbnailURL(course.thumbnail);
+  console.log(course, "dxgfchvjb");
+  return course;
+};
+const addLessonToCourse = async (lessonId, courseId) => {
+  let course = await courseRepository.addLessonToCourse(lessonId, courseId);
+  return true;
 };
 module.exports = {
   courseCreate,
   getAllCourseByTutor,
+  getCourseDetails,
+  addLessonToCourse,
 };
