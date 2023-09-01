@@ -2,13 +2,14 @@ const router = require("express").Router();
 const authRoute = require("./auth.route");
 
 const userDetailsRoute = require("./user/profile.route");
+const userCourseRoute = require("./user/course.route");
 
 const tutorDetailsRoute = require("./tutor/profile.route");
 const tutorCourseRoute = require("./tutor/course.route");
 const tutorLessonRoute = require("./tutor/lesson.route");
 const adminUsersRoute = require("./admin/users.route");
 const adminTutorsRoute = require("./admin/tutors.route");
-const adminCategoryRoute = require('./admin/category.route')
+const adminCategoryRoute = require("./admin/category.route");
 
 const defaultRoutes = [
   {
@@ -18,6 +19,10 @@ const defaultRoutes = [
   {
     path: "/user/details",
     route: userDetailsRoute,
+  },
+  {
+    path: "/user/courses",
+    route: userCourseRoute,
   },
   {
     path: "/tutor/details",

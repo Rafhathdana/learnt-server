@@ -68,31 +68,27 @@ const getThumbnailURL = async (imageName) => {
     return "https://i.ytimg.com/vi/pN6jk0uUrD8/mqdefault.jpg";
   }
   if (process.env.DATA_STORAGE == "s3bucket") {
-    console.log(imageName);
     let imageUrl;
     try {
       imageUrl = await getSignedUrl(
         s3,
         new GetObjectCommand({
           Bucket: bucketName,
-          key: imageName,
+          Key: imageName,
         }),
         {
           expiresIn: 6000 * 10,
         }
       );
-      console.log(imageUrl);
       return imageUrl;
     } catch (e) {
-      console.log(imageUrl);
       console.log(e);
     }
-    console.log(imageUrl);
   }
 };
 const uploadLesson = async (lesson) => {
   const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
-  const lessonTitleWithoutSpaces = lesson.date.title.trim().replace(/ /g, "-");
+  const lessonTitleWithoutSpaces = lesson.data.title.trim().replace(/ /g, "-");
   const extension = lesson.file.mimetype.split("/")[1];
   const fileName = `lesson/${lessonTitleWithoutSpaces}-${uniqueSuffix}.${extension}`;
   const params = {

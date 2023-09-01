@@ -10,7 +10,7 @@ const createCategory = async (newCategory) => {
   const category = await categoryRepository.createCategory(newCategory);
   return category;
 };
-module.export = {
+module.exports = {
   createCategory,
   getAllCategories,
 };

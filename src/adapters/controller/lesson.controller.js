@@ -1,4 +1,4 @@
-const lessonService  = require("../../usecases/lesson.service");
+const lessonService = require("../../usecases/lesson.service");
 const { createLessonSchema } = require("../../entities/lesson.validator");
 const addLessonToCourse = async (req, res) => {
   const { value, error } = createLessonSchema.validate(req.body);
@@ -9,6 +9,8 @@ const addLessonToCourse = async (req, res) => {
     file: req.file,
     tutor: req.tutor,
   };
+
+  console.log(value);
   const lessonData = await lessonService.addLessonToCourse(lesson);
   res.status(200).json({ message: "lesson added successfully" });
 };

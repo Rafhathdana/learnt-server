@@ -37,9 +37,9 @@ class AppError extends Error {
   }
   static authentication(message = ReasonPhrases.UNAUTHORIZED) {
     return new AppError(
-      errorCodes.AUTHENTICATION_ERROR,
+      errorCodes?.AUTHENTICATION_ERROR,
       message,
-      StatusCodes.UNAUTHORIZED
+      StatusCodes?.UNAUTHORIZED
     );
   }
   static forbidden(message = ReasonPhrases.FORBIDDEN) {

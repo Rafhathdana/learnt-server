@@ -30,7 +30,7 @@ const getCoursesByTutorId = async (tutorId) => {
 };
 const getCourseById = async (courseId) => {
   const courses = await Course.findOne({ _id: courseId })
-    // .populate("lessons")
+    .populate("lessons")
     .populate("tutor", "name")
     .catch((err) => {
       console.log(err);
@@ -44,7 +44,43 @@ const addLessonToCourse = async (lessonId, courseId) => {
   );
   return true;
 };
+const getAllCourses = async () => {
+  const courses = await Course.find();
+  return courses;
+};
+const findCourseById = async (courseId) => {
+  const course = await Course.findById({ _id: courseId }).select("__v");
+  if (!course) {
+    console.log("Course not found - " + course);
+  }
+  return course;
+};
+const getAllCourseByFilter = async (query) => {
+  const courses = await Course.find({
+    title: { $regex: query.search.trim(), $options: "i" },
+  })
+    .select("-__v")
+    .where("category")
+    .in(query.category)
+    .where("difficulty")
+    .in(query.difficulty)
+    .sort(query.sortBy)
+    .skip(query.page * query.limit)
+    .limit(query.limit);
+  return courses;
+};
+const getCountByFilter = async ({ search, category, difficulty }) => {
+  const total = await Course.countDocuments({
+    category: { $in: [...category] },
+    difficulty: { $in: [...difficulty] },
+    title: { $regex: search, $options: "i" },
+  });
+};
 module.exports = {
+  getCountByFilter,
+  getAllCourseByFilter,
+  findCourseById,
+  getAllCourses,
   createCourse,
   getCoursesByTutorId,
   getCourseById,

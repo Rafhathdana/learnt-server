@@ -15,7 +15,7 @@ const createCategory = asyncHandler(async (req, res) => {
   const category = await categoryService.createCategory(value);
   return res.status(200).json({ message: "category created successfully" });
 });
-module.exports={
-    getAllCategories,
-    createCategory
-}
+module.exports = {
+  getAllCategories,
+  createCategory,
+};
