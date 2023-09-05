@@ -171,7 +171,22 @@ const updateUserDetails = async (userDetails) => {
 
   return updatedUserDetails;
 };
-
+const getEnrolledStudentsCount = async (courseId) => {
+  const enrolledStudentsCount = await userRepository.getEnrolledCountById(
+    courseId
+  );
+  return enrolledStudentsCount;
+};
+const isEnrolledForCourse = async ({ courseId, userId }) => {
+  const userData = await userRepository.findUserByCourseId({
+    courseId,
+    userId,
+  });
+  if (userData) {
+    return true;
+  }
+  return false;
+};
 module.exports = {
   handleSignIn,
   handleSignUp,
@@ -184,4 +199,6 @@ module.exports = {
   unblockUser,
   getUserDetails,
   updateUserDetails,
+  getEnrolledStudentsCount,
+  isEnrolledForCourse,
 };

@@ -3,7 +3,7 @@ const errorHandler = require("../../frameworks/web/middlewares/error.handler");
 const AppError = require("../../frameworks/web/utils/app.error.util");
 const asyncHandler = require("../../frameworks/web/utils/async.handler.util");
 const courseService = require("../../usecases/course.service");
-
+const userService = require("../../usecases/user.service");
 const handleCourseCreate = asyncHandler(async (req, res) => {
   const { value, error } = createCourseSchema.validate(req.body);
   if (error) {
@@ -19,6 +19,8 @@ const getAllCourseByTutor = async (req, res) => {
 };
 const getSpecificCourse = async (req, res) => {
   const course = await courseService.getCourseDetails(req.params.id);
+  const totalStudentsEnrolled=await userService.getEnrolledStudentsCount(req.params.id)
+  course.totalStudentsEnrolled=totalStudentsEnrolled
   res.status(200).json({ message: "course Found", data: course });
 };
 const getAllCourses = async (req, res) => {
@@ -31,7 +33,9 @@ const getAllCourses = async (req, res) => {
     category: req.query.category || "all",
     reqSort: req.query.sort,
   };
+  console.log(query, "ztrydthfg1");
   const { courses, total } = await courseService.getAllCourseByFilter(query);
+  console.log(courses);
   return res
     .status(200)
     .json({ message: "Course found", total, data: courses });

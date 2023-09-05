@@ -18,5 +18,7 @@ const connectDB = async () => {
 mongoose.connection
   .on("open", async () => console.log("Mongoose connected successfully"))
   .on("error", async (err) => console.error("mongoose connection error", err));
-
+mongoose.connection.on("disconnected", () => {
+  console.log("mongodb disconnected");
+});
 module.exports = connectDB;

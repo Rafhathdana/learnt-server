@@ -49,9 +49,10 @@ const getAllCourses = async () => {
   return courses;
 };
 const findCourseById = async (courseId) => {
-  const course = await Course.findById({ _id: courseId }).select("__v");
+  const course = await Course.findById({ _id: courseId }).select("-__v");
   if (!course) {
     console.log("Course not found - " + course);
+    return false;
   }
   return course;
 };
@@ -67,6 +68,8 @@ const getAllCourseByFilter = async (query) => {
     .sort(query.sortBy)
     .skip(query.page * query.limit)
     .limit(query.limit);
+  console.log(courses, "fvsdcxs");
+
   return courses;
 };
 const getCountByFilter = async ({ search, category, difficulty }) => {
@@ -75,6 +78,7 @@ const getCountByFilter = async ({ search, category, difficulty }) => {
     difficulty: { $in: [...difficulty] },
     title: { $regex: search, $options: "i" },
   });
+  return total;
 };
 module.exports = {
   getCountByFilter,

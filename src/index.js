@@ -42,9 +42,9 @@ app.use("*", (req, res) => {
 //error will be handled here
 app.use(errorHandler);
 // Database connection setup
-connectDB();
 
 const server = app.listen(process.env.PORT, () => {
+  connectDB();
   console.log(`server started at port${process.env.PORT}`);
 });
 //process closed due to the uncaught exception and exit with code of 1 (indicating an error)

@@ -3,6 +3,7 @@ const authRoute = require("./auth.route");
 
 const userDetailsRoute = require("./user/profile.route");
 const userCourseRoute = require("./user/course.route");
+const userOrdersRoute = require("./user/order.route");
 
 const tutorDetailsRoute = require("./tutor/profile.route");
 const tutorCourseRoute = require("./tutor/course.route");
@@ -23,6 +24,10 @@ const defaultRoutes = [
   {
     path: "/user/courses",
     route: userCourseRoute,
+  },
+  {
+    path: "/user/orders",
+    route: userOrdersRoute,
   },
   {
     path: "/tutor/details",

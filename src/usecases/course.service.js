@@ -41,7 +41,7 @@ const getCourseDetails = async (courseId) => {
   let course = await courseRepository.getCourseById(courseId);
   course = course.toObject();
   console.log("gfxcvbn ");
-  course.thumbnail = await bucketService.getThumbnailURL(course.thumbnail);
+  course.thumbnailURL = await bucketService.getThumbnailURL(course.thumbnail);
   console.log(course, "dxgfchvjb");
   return course;
 };
@@ -70,6 +70,7 @@ const getAllCourseByFilter = async (query) => {
       : query.category.split(",");
   query.sort = query.reqSort ? query.reqSort.split(",") : [query.sort];
   query.sortBy = {};
+
   if (query.sort[1]) {
     query.sortBy[query.sort[0]] = query.sort[1];
   } else {
@@ -80,6 +81,9 @@ const getAllCourseByFilter = async (query) => {
   const coursesWithURL = await bucketService.attachThumbnailURLToCourses(
     courses
   );
+  console.log(total, "ycfhjbtfjgbhmftugykm");
+  console.log(courses, "ycfhjbtfjgbhmftudscdagykm");
+
   return { total, courses: coursesWithURL };
 };
 module.exports = {

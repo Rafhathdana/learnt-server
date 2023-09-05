@@ -91,6 +91,14 @@ const updateDetailsById = async (user) => {
   );
   return updatedUser;
 };
+const getEnrolledCountById = async (courseId) => {
+  const enrolledStudents = await User.countDocuments({
+    enrolledCourses: { $in: [courseId] },
+  });
+  return enrolledStudents;
+};
+const findUserByCourseId = async ({ courseId, userId }) =>
+  User.findOne({ _id: userId, enrolledCourses: { $in: [courseId] } });
 module.exports = {
   createUser,
   findUserByEmail,
@@ -105,4 +113,6 @@ module.exports = {
   blockUserById,
   unblockUserById,
   updateDetailsById,
+  getEnrolledCountById,
+  findUserByCourseId,
 };
