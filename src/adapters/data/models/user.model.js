@@ -29,7 +29,7 @@ const userSchema = new mongoose.Schema(
     address: String,
     gitLink: String,
     linkedinLink: String,
-    enrolledCourse: [{ type: mongoose.Schema.Types.ObjectId, ref: "courses" }],
+    enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: "courses" }],
     isBlocked: {
       type: Boolean,
       default: false,

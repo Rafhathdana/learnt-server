@@ -1,4 +1,5 @@
 const courseRepository = require("../adapters/gateway/course.repository");
+const userRepository = require("../adapters/gateway/user.repository");
 const AppError = require("../frameworks/web/utils/app.error.util");
 const bucketService = require("./bucket.service");
 const cloudinaryService = require("./cloudinary.service");
@@ -86,6 +87,30 @@ const getAllCourseByFilter = async (query) => {
 
   return { total, courses: coursesWithURL };
 };
+const enrollInCourse = async ({ courseId, userId }) => {
+  const isValidCourse = await courseRepository.findCourseById(courseId);
+  if (!isValidCourse) {
+    console.log("invalid course recieved for enrollment");
+    return false;
+  }
+  console.log(isValidCourse, "rvfsgdfedrs");
+
+  const isEnrolled = await userRepository.enrollInCourseById({
+    courseId,
+    userId,
+  });
+  console.log(isEnrolled, "rytfedwaghsjjadjks");
+  return isEnrolled;
+};
+const getEnrolledCourses = async (userId) => {
+  const coursesEnrolled = await userRepository.getCoursesEnrolled(userId);
+  for (let i = 0; i < coursesEnrolled.length; i++) {
+    coursesEnrolled[i].thumbnailURL = await bucketService.getThumbnailURL(
+      coursesEnrolled[i].thumbnail
+    );
+  }
+  return coursesEnrolled;
+};
 module.exports = {
   getAllCourseByFilter,
   getAllCourses,
@@ -93,4 +118,6 @@ module.exports = {
   getAllCourseByTutor,
   getCourseDetails,
   addLessonToCourse,
+  getEnrolledCourses,
+  enrollInCourse,
 };

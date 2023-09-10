@@ -5,6 +5,11 @@ const isAuth = require("../../middleware/user.auth");
 
 router.route("/").get(courseController.getAllCourses);
 router
+  .route("/enroll")
+  .all(isAuth)
+  .get(courseController.getEnrolledCourses)
+  .post(courseController.enrollCourse);
+router
   .route("/enroll/:id")
   .get(validateParams, courseController.getSpecificCourse);
 module.exports = router;

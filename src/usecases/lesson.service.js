@@ -27,6 +27,7 @@ const addLessonToCourse = async (lesson) => {
 const getLesson = async (lessonId) => {
   let lesson = await lessonRepository.findLessonById(lessonId);
   lesson = lesson.toObject();
+  lesson.videoFormat= lesson.videoKey.split('.')[-1]
   lesson.videoURL = await bucketService.getVideoURL(lesson.videoKey);
   return lesson;
 };

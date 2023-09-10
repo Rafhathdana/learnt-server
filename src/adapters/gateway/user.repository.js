@@ -99,6 +99,32 @@ const getEnrolledCountById = async (courseId) => {
 };
 const findUserByCourseId = async ({ courseId, userId }) =>
   User.findOne({ _id: userId, enrolledCourses: { $in: [courseId] } });
+const enrollInCourseById = async ({ courseId, userId }) => {
+  console.log(courseId, userId, "rfygcvehxj");
+  const userData = await User.updateOne(
+    { _id: userId },
+    { $addToSet: { enrolledCourses: courseId } }
+  );
+  console.log("gfdvesd", userData);
+  return userData;
+};
+const getCoursesEnrolled = async (userId) => {
+  const coursesEnrolled = await User.aggregate([
+    { $match: { _id: new mongoose.Types.ObjectId(userId) } },
+    { $project: { enrolledCourses: 1, _id: 0 } },
+    {
+      $lookup: {
+        from: "courses",
+        localField: "enrolledCourses",
+        foreignField: "_id",
+        as: "details",
+      },
+    },
+    { $project: { details: 1 } },
+  ]);
+  console.log(coursesEnrolled);
+  return coursesEnrolled[0].details;
+};
 module.exports = {
   createUser,
   findUserByEmail,
@@ -115,4 +141,6 @@ module.exports = {
   updateDetailsById,
   getEnrolledCountById,
   findUserByCourseId,
+  enrollInCourseById,
+  getCoursesEnrolled,
 };

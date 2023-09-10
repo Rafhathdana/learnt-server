@@ -29,8 +29,9 @@ const verifyPayment = asyncHandler(async (req, res) => {
       courseId: req.body.course_id,
       userId: req.user._id,
     });
+
   }
-  res.status(200).jsom(data);
+  res.status(200).json(data);
 });
 const getAllOrders = asyncHandler(async (req, res) => {
   const ordersByUsers = await orderServices.getAllOrders(req.user._id);

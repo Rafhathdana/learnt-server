@@ -14,6 +14,7 @@
     "@aws-sdk/client-s3": "^3.385.0",
     "@aws-sdk/s3-request-presigner": "^3.385.0",
     "bcrypt": "^5.1.0",
+    "cloudinary": "^1.40.0",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "cors": "^2.8.5",
