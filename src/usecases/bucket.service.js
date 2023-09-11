@@ -121,7 +121,8 @@ const uploadLesson = async (lesson) => {
 const getVideoURL = async (videoName) => {
   if (process.env.FAKE_BUCKET) {
     console.log("Faked Video url");
-    return "http://clips.vorwaerts-gmbh.de/VfE.ogv";
+    // return "http://clips.vorwaerts-gmbh.de/VfE.ogv";
+    return "https://dagrs.berkeley.edu/sites/default/files/2020-01/sample.pdf";
   }
   if (process.env.DATA_STORAGE == "s3bucket") {
     console.count("GET Request send to S3");
@@ -129,7 +130,7 @@ const getVideoURL = async (videoName) => {
       s3,
       new GetObjectCommand({
         Bucket: bucketName,
-        key: videoName,
+        Key: videoName,
       }),
       { expiresIn: 60 * 60 * 60 }
     );
