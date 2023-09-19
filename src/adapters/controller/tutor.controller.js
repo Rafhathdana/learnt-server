@@ -38,10 +38,18 @@ const updateTutorDetails = asyncHandler(async (req, res) => {
     .status(200)
     .json({ message: "tutor details updated successfully", data: tutorData });
 });
+const getTopTutors = async (re, res) => {
+  const topTutors = await tutorService.getTopTutors();
+  return res.status(200).json({
+    message: "Top tutors found",
+    data: topTutors,
+  });
+};
 module.exports = {
   getAllTutors,
   blockTutor,
   unblockTutor,
   getTutorDetails,
   updateTutorDetails,
+  getTopTutors,
 };

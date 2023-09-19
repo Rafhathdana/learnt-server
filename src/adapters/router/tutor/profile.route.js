@@ -6,4 +6,6 @@ router
   .all(isAuth)
   .get(tutorController.getTutorDetails)
   .post(tutorController.updateTutorDetails);
+router.route("/top").get(tutorController.getTopTutors);
+
 module.exports = router;

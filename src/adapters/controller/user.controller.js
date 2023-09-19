@@ -1,5 +1,5 @@
 const objectIdSchema = require("../../entities/id.validator");
-const userDetailsSchema = require("../../entities/user.details.validator copy");
+const userDetailsSchema = require("../../entities/user.details.validator");
 const AppError = require("../../frameworks/web/utils/app.error.util");
 const asyncHandler = require("../../frameworks/web/utils/async.handler.util");
 const userService = require("../../usecases/user.service");

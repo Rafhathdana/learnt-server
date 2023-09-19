@@ -25,7 +25,7 @@ const createOrder = async ({ courseId, userId, user }) => {
     courseId,
     orderId: orderId.toString(),
   });
-  console.log("vefcdsw")
+  console.log("vefcdsw");
   return { ...orderDetails, orderId };
 };
 const updateOrderStatus = async (orderId) => {

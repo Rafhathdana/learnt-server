@@ -93,6 +93,11 @@ const updateDetailsById = async (tutor) => {
   );
   return updatedTutor;
 };
+const getTutors = async (limit) => {
+  const topTutors = await Tutor.find({}).limit(limit).select("name email");
+  return topTutors;
+};
+
 module.exports = {
   createTutor,
   findTutorByEmail,
@@ -107,4 +112,5 @@ module.exports = {
   blockTutorById,
   unblockTutorById,
   updateDetailsById,
+  getTutors,
 };

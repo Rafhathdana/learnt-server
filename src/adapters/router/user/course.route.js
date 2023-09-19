@@ -12,4 +12,12 @@ router
 router
   .route("/enroll/:id")
   .get(validateParams, courseController.getSpecificCourse);
+router
+  .route("/enrolled/:id")
+  .all(isAuth)
+  .get(
+    validateParams,
+    courseController.enrollValidation,
+    courseController.getSpecificCourse
+  );
 module.exports = router;
