@@ -60,6 +60,18 @@ const getEnrolledCourses = async (req, res) => {
   const enrolledCourses = await courseService.getEnrolledCourses(req.user._id);
   return res.status(200).json({ message: "success", data: enrolledCourses });
 };
+const enrollValidation = async (req, res, next) => {
+  const params = {
+    courseId: req.params.id,
+    userId: req.user._id,
+  };
+  const isEnrolled = await userService.isEnrolledForCourse(params);
+  if (isEnrolled) {
+    next();
+    return;
+  }
+  res.status(403).json({ error: "course not enrolled" });
+};
 module.exports = {
   handleCourseCreate,
   getAllCourseByTutor,
@@ -67,4 +79,5 @@ module.exports = {
   getAllCourses,
   enrollCourse,
   getEnrolledCourses,
+  enrollValidation,
 };

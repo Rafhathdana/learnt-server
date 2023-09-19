@@ -80,6 +80,13 @@ const getCountByFilter = async ({ search, category, difficulty }) => {
   });
   return total;
 };
+
+// const getCoursesCountByTutorId = async (tutorId) => {
+//   const courses = await Course.find({ tutor: tutorId })..catch((err) => {
+//     console.log(err);
+//   });
+//   return courses;
+// };
 module.exports = {
   getCountByFilter,
   getAllCourseByFilter,

@@ -44,6 +44,7 @@ const handleSignIn = async ({ email, password }) => {
     refreshTokenTutor,
   };
 };
+
 const handleSignUp = async ({ name, password, phone, email, otp }) => {
   const isPhoneOtp = await otpRepository.findOtpByPhone(phone);
   if (!isPhoneOtp) {
@@ -179,6 +180,11 @@ const updateTutorDetails = async (tutorDetails) => {
 
   return updatedTutorDetails;
 };
+const getTopTutors = async () => {
+  const limit = 5;
+  const topTutors = await tutorRepository.getTutors(limit);
+  return topTutors;
+};
 module.exports = {
   handleSignIn,
   handleSignUp,
@@ -191,4 +197,5 @@ module.exports = {
   unblockTutor,
   getTutorDetails,
   updateTutorDetails,
+  getTopTutors,
 };

@@ -111,6 +111,19 @@ const getEnrolledCourses = async (userId) => {
   }
   return coursesEnrolled;
 };
+const getAllCourseCountByTutor = async (tutorId) => {
+  console.log(tutorId);
+  const courses = await courseRepository.getCoursesCountByTutorId(tutorId);
+  for (let i = 0; i < courses.length; i++) {
+    courses[i] = courses[i].toObject();
+    console.log(courses[i].thumbnail, i);
+    courses[i].thumbnailURL = await bucketService.getThumbnailURL(
+      courses[i].thumbnail
+    );
+    console.log("gvjhbkn");
+  }
+  return courses;
+};
 module.exports = {
   getAllCourseByFilter,
   getAllCourses,
