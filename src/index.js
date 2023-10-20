@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === "production") {
 }
 
 // Application Routes
-app.use("/api", require("./adapters/router"));
+app.use("/", require("./adapters/router"));
 
 //unnessary route will be given 404 error
 app.use("*", (req, res) => {
