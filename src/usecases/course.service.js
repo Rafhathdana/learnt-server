@@ -9,7 +9,6 @@ const courseCreate = async (file, value, tutor) => {
   let thumbnail;
 
   if (process.env.DATA_STORAGE == "s3bucket") {
-    console.log("efcsjkdx");
     thumbnail = await bucketService.uploadThumbnailToBucket(value, file);
   } else {
     thumbnail = await cloudinaryService.uploaded(value, file);
@@ -26,24 +25,19 @@ const courseCreate = async (file, value, tutor) => {
   return isCourseCreated;
 };
 const getAllCourseByTutor = async (tutorId) => {
-  console.log(tutorId);
   const courses = await courseRepository.getCoursesByTutorId(tutorId);
   for (let i = 0; i < courses.length; i++) {
     courses[i] = courses[i].toObject();
-    console.log(courses[i].thumbnail, i);
     courses[i].thumbnailURL = await bucketService.getThumbnailURL(
       courses[i].thumbnail
     );
-    console.log("gvjhbkn");
   }
   return courses;
 };
 const getCourseDetails = async (courseId) => {
   let course = await courseRepository.getCourseById(courseId);
   course = course.toObject();
-  console.log("gfxcvbn ");
   course.thumbnailURL = await bucketService.getThumbnailURL(course.thumbnail);
-  console.log(course, "dxgfchvjb");
   return course;
 };
 const addLessonToCourse = async (lessonId, courseId) => {
@@ -82,24 +76,19 @@ const getAllCourseByFilter = async (query) => {
   const coursesWithURL = await bucketService.attachThumbnailURLToCourses(
     courses
   );
-  console.log(total, "ycfhjbtfjgbhmftugykm");
-  console.log(courses, "ycfhjbtfjgbhmftudscdagykm");
 
   return { total, courses: coursesWithURL };
 };
 const enrollInCourse = async ({ courseId, userId }) => {
   const isValidCourse = await courseRepository.findCourseById(courseId);
   if (!isValidCourse) {
-    console.log("invalid course recieved for enrollment");
     return false;
   }
-  console.log(isValidCourse, "rvfsgdfedrs");
 
   const isEnrolled = await userRepository.enrollInCourseById({
     courseId,
     userId,
   });
-  console.log(isEnrolled, "rytfedwaghsjjadjks");
   return isEnrolled;
 };
 const getEnrolledCourses = async (userId) => {
@@ -112,15 +101,12 @@ const getEnrolledCourses = async (userId) => {
   return coursesEnrolled;
 };
 const getAllCourseCountByTutor = async (tutorId) => {
-  console.log(tutorId);
   const courses = await courseRepository.getCoursesCountByTutorId(tutorId);
   for (let i = 0; i < courses.length; i++) {
     courses[i] = courses[i].toObject();
-    console.log(courses[i].thumbnail, i);
     courses[i].thumbnailURL = await bucketService.getThumbnailURL(
       courses[i].thumbnail
     );
-    console.log("gvjhbkn");
   }
   return courses;
 };
@@ -133,4 +119,5 @@ module.exports = {
   addLessonToCourse,
   getEnrolledCourses,
   enrollInCourse,
+  getAllCourseCountByTutor,
 };

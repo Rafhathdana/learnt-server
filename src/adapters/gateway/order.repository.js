@@ -1,14 +1,12 @@
 const Order = require("../data/models/orders.model");
 const AppError = require("../../frameworks/web/utils/app.error.util");
 const createOrder = async ({ userId, courseId, status, price }) => {
-  console.log("rgvfcdxs", userId, courseId, status, price);
   const order = new Order({
     user: userId,
     course: courseId,
     status,
     price,
   });
-  console.log("fdcsx");
   return order
     .save()
     .then((response) => response)

@@ -3,7 +3,6 @@ const verifyToken = require("../../frameworks/web/utils/auth.util");
 const isAuthAdmin = async (req, res, next) => {
   console.log("\nadmin isAuth Middleware accessed");
   const accessToken = req.cookies["accessTokenAdmin"];
-  console.log("rbvfdcs");
   if (!accessToken) return res.status(400).json({ err: "token is missing" });
   verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET)
     .then((response) => {

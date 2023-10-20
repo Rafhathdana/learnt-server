@@ -45,7 +45,6 @@ const handleSignUp = async ({ name, password, phone, email, otp }) => {
   if (!isPhoneOtp) {
     throw AppError.conflict("Try Again Otp TimeOut");
   }
-  console.log(isPhoneOtp.otp, otp);
   if (isPhoneOtp.otp != otp) {
     throw AppError.conflict("Otp is Not Correct Try Again");
   }
@@ -71,7 +70,6 @@ const handleSignUp = async ({ name, password, phone, email, otp }) => {
       username = username + suffix;
     }
   }
-  console.log(username);
   const user = await userRepository.createUser({
     name,
     password: hashedPassword,
@@ -164,9 +162,6 @@ const getUserDetails = async (userId) => {
 const updateUserDetails = async (userDetails) => {
   const updatedUserDetails = await userRepository.updateDetailsById(
     userDetails
-  );
-  console.log(
-    `user details updated for ${userDetails.name} : ${updatedUserDetails} and ${updatedUserDetails.visible}`
   );
 
   return updatedUserDetails;

@@ -28,7 +28,6 @@ const generateRazorPayOrder = async ({
   };
   try {
     const order = await instance.orders.create(options);
-    console.log("razor pay order details :", order);
     return order;
   } catch (err) {
     console.log(`Error happened at Razorpay on orderId : ${orderId}`, err);
@@ -45,8 +44,6 @@ const verifyPayment = ({
     .createHmac("sha256", process.env.RAZORPAY_SECRET)
     .update(body.toString())
     .digest("hex");
-  console.log("sig received", razorpay_signature);
-  console.log("sig generated", expectedSignature);
   let data = { signatureIsValid: "false" };
   if (expectedSignature === razorpay_signature) {
     data = { signatureIsValid: "true" };

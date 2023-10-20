@@ -17,7 +17,6 @@ const OTP = async (mobile, otp) => {
         console.log("error");
         reject(res.error);
       } else {
-        console.log("sussecc");
         resolve(res.body);
       }
     });

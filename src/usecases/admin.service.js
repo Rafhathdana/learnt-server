@@ -37,7 +37,6 @@ const handleSignIn = async ({ email, password }) => {
 
   // commented until until database refresh token cleanUp is implemented
   await adminRepository.addRefreshTokenById(admin._id, refreshToken);
-  console.log(adminWithoutPassword);
   return {
     adminData: adminWithoutPassword,
     accessToken,
@@ -49,7 +48,6 @@ const handleSignUp = async ({ name, password, phone, email, otp }) => {
   if (!isPhoneOtp) {
     throw AppError.conflict("Try Again Otp TimeOut");
   }
-  console.log(isPhoneOtp.otp, otp);
   if (isPhoneOtp.otp != otp) {
     throw AppError.conflict("Otp is Not Correct Try Again");
   }
@@ -77,7 +75,6 @@ const handleSignUp = async ({ name, password, phone, email, otp }) => {
       adminname = adminname + suffix;
     }
   }
-  console.log(adminname);
   const admin = await adminRepository.createAdmin({
     name,
     password: hashedPassword,

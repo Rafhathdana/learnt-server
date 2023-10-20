@@ -19,17 +19,13 @@ const {
 const handleSignIn = async ({ email, password }) => {
   let tutor = await tutorRepository.findTutorByEmail(email);
   if (!tutor) throw AppError.validation("Email not registered");
-  console.log(tutor, "efdvs");
   const isPasswordMatch = await comparePasswords(password, tutor.password);
   if (!isPasswordMatch) throw AppError.validation("Invalid Password");
-  console.log(isPasswordMatch, "efderwfcdszvs");
 
   const isBlocked = await tutorRepository.checkIsBlocked(email);
   if (isBlocked) throw AppError.forbidden("Access denied");
-  console.log(isBlocked, "edcsdvs");
 
   const { password: _, ...tutorWithoutPassword } = tutor.toObject();
-  console.log(password, "dfsvc");
   const accessTokenTutor = createAccessToken(
     tutorWithoutPassword,
     (tutorBool = true)
@@ -50,7 +46,6 @@ const handleSignUp = async ({ name, password, phone, email, otp }) => {
   if (!isPhoneOtp) {
     throw AppError.conflict("Try Again Otp TimeOut");
   }
-  console.log(isPhoneOtp.otp, otp);
   if (isPhoneOtp.otp != otp) {
     throw AppError.conflict("Otp is Not Correct Try Again");
   }
@@ -78,7 +73,6 @@ const handleSignUp = async ({ name, password, phone, email, otp }) => {
       tutorname = tutorname + suffix;
     }
   }
-  console.log(tutorname);
   const tutor = await tutorRepository.createTutor({
     name,
     password: hashedPassword,
@@ -173,9 +167,6 @@ const getTutorDetails = async (tutorId) => {
 const updateTutorDetails = async (tutorDetails) => {
   const updatedTutorDetails = await tutorRepository.updateDetailsById(
     tutorDetails
-  );
-  console.log(
-    `tutor details updated for ${tutorDetails.name} : ${updatedTutorDetails} and ${updatedTutorDetails.visible}`
   );
 
   return updatedTutorDetails;
