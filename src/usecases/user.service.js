@@ -2,6 +2,7 @@ const otpRepository = require("../adapters/gateway/common.repository");
 const userRepository = require("../adapters/gateway/user.repository");
 const AppError = require("../frameworks/web/utils/app.error.util");
 const verifyToken = require("../frameworks/web/utils/auth.util");
+const firbaseService = require("./firebase.service");
 const {
   comparePasswords,
   createHashPassword,
@@ -109,6 +110,32 @@ const handleSignUpOtp = async ({ email, phone }) => {
     return user;
   }
 };
+const handleGoogleSignIn = async (token) => {
+  const { email } = await firbaseService.verifyToken(token);
+
+  const user = await userRepository.findUserByEmail(email);
+  if (!user)
+    throw AppError.validation(
+      "Email not registered. Please create a new account"
+    );
+
+  const isBlocked = await userRepository.checkIsBlocked(email);
+  if (isBlocked) throw AppError.forbidden("Access denied");
+
+  const { password: _, ...userWithoutPassword } = user.toObject();
+
+  const accessToken = createAccessToken(userWithoutPassword);
+  const refreshToken = createRefreshToken(userWithoutPassword);
+
+  // commented until until database refresh token cleanUp is implemented
+  await userRepository.addRefreshTokenById(user._id, refreshToken);
+
+  return {
+    user: userWithoutPassword,
+    accessToken,
+    refreshToken,
+  };
+};
 const getUserFromToken = async (accessToken) => {
   return verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET)
     .then(
@@ -196,4 +223,5 @@ module.exports = {
   updateUserDetails,
   getEnrolledStudentsCount,
   isEnrolledForCourse,
+  handleGoogleSignIn,
 };

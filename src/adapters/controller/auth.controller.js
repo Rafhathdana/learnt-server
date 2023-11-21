@@ -33,6 +33,19 @@ const handleSignIn = asyncHandler(async (req, res) => {
   console.log("user login successful.user is ", user.name);
   res.status(200).json({ message: "Login successfull", user });
 });
+const signInWithGoogle = asyncHandler(async (req, res) => {
+  const { token } = req.body;
+
+  const { user, accessToken, refreshToken } =
+    await userService.handleGoogleSignIn(token);
+
+  attachTokenToCookie("accessToken", accessToken, res);
+  attachTokenToCookie("refreshToken", refreshToken, res);
+
+  console.log("user login successful. user is ", user.name);
+
+  res.status(200).json({ message: "Login successfull", user });
+});
 /**
  * @desc user signup
  * @route  POST /auth/signup
@@ -113,4 +126,5 @@ module.exports = {
   restoreUserDetails,
   refreshToken,
   handleLogout,
+  signInWithGoogle,
 };
