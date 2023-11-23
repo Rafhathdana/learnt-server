@@ -31,7 +31,6 @@ const checkIsBlocked = async (email) => {
   return user.isBlocked;
 };
 const createUser = ({ name, password, phone, email, username }) => {
-  console.log(username);
   const user = new User({
     name,
     email,
@@ -100,12 +99,10 @@ const getEnrolledCountById = async (courseId) => {
 const findUserByCourseId = async ({ courseId, userId }) =>
   User.findOne({ _id: userId, enrolledCourses: { $in: [courseId] } });
 const enrollInCourseById = async ({ courseId, userId }) => {
-  console.log(courseId, userId, "rfygcvehxj");
   const userData = await User.updateOne(
     { _id: userId },
     { $addToSet: { enrolledCourses: courseId } }
   );
-  console.log("gfdvesd", userData);
   return userData;
 };
 const getCoursesEnrolled = async (userId) => {
@@ -122,7 +119,6 @@ const getCoursesEnrolled = async (userId) => {
     },
     { $project: { details: 1 } },
   ]);
-  console.log(coursesEnrolled);
   return coursesEnrolled[0].details;
 };
 module.exports = {

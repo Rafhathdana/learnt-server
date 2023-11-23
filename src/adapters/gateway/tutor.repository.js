@@ -32,7 +32,6 @@ const checkIsBlocked = async (email) => {
   return Tutor.isBlocked;
 };
 const createTutor = ({ name, password, phone, email, tutorname }) => {
-  console.log(tutorname);
   const tutor = new Tutor({
     name,
     email,

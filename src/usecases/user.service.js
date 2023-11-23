@@ -2,6 +2,7 @@ const otpRepository = require("../adapters/gateway/common.repository");
 const userRepository = require("../adapters/gateway/user.repository");
 const AppError = require("../frameworks/web/utils/app.error.util");
 const verifyToken = require("../frameworks/web/utils/auth.util");
+const firbaseService = require("./firebase.service");
 const {
   comparePasswords,
   createHashPassword,
@@ -45,7 +46,6 @@ const handleSignUp = async ({ name, password, phone, email, otp }) => {
   if (!isPhoneOtp) {
     throw AppError.conflict("Try Again Otp TimeOut");
   }
-  console.log(isPhoneOtp.otp, otp);
   if (isPhoneOtp.otp != otp) {
     throw AppError.conflict("Otp is Not Correct Try Again");
   }
@@ -71,7 +71,6 @@ const handleSignUp = async ({ name, password, phone, email, otp }) => {
       username = username + suffix;
     }
   }
-  console.log(username);
   const user = await userRepository.createUser({
     name,
     password: hashedPassword,
@@ -110,6 +109,32 @@ const handleSignUpOtp = async ({ email, phone }) => {
     });
     return user;
   }
+};
+const handleFirebaseSignIn = async (token) => {
+  const { email } = await firbaseService.verifyToken(token);
+
+  const user = await userRepository.findUserByEmail(email);
+  if (!user)
+    throw AppError.validation(
+      "Email not registered. Please create a new account"
+    );
+
+  const isBlocked = await userRepository.checkIsBlocked(email);
+  if (isBlocked) throw AppError.forbidden("Access denied");
+
+  const { password: _, ...userWithoutPassword } = user.toObject();
+
+  const accessToken = createAccessToken(userWithoutPassword);
+  const refreshToken = createRefreshToken(userWithoutPassword);
+
+  // commented until until database refresh token cleanUp is implemented
+  await userRepository.addRefreshTokenById(user._id, refreshToken);
+
+  return {
+    user: userWithoutPassword,
+    accessToken,
+    refreshToken,
+  };
 };
 const getUserFromToken = async (accessToken) => {
   return verifyToken(accessToken, process.env.ACCESS_TOKEN_SECRET)
@@ -165,9 +190,6 @@ const updateUserDetails = async (userDetails) => {
   const updatedUserDetails = await userRepository.updateDetailsById(
     userDetails
   );
-  console.log(
-    `user details updated for ${userDetails.name} : ${updatedUserDetails} and ${updatedUserDetails.visible}`
-  );
 
   return updatedUserDetails;
 };
@@ -201,4 +223,5 @@ module.exports = {
   updateUserDetails,
   getEnrolledStudentsCount,
   isEnrolledForCourse,
+  handleFirebaseSignIn,
 };

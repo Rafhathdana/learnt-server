@@ -36,9 +36,7 @@ const getAllCourses = async (req, res) => {
     category: req.query.category || "all",
     reqSort: req.query.sort,
   };
-  console.log(query, "ztrydthfg1");
   const { courses, total } = await courseService.getAllCourseByFilter(query);
-  console.log(courses);
   return res
     .status(200)
     .json({ message: "Course found", total, data: courses });

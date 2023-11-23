@@ -25,7 +25,6 @@ const getUserDetails = asyncHandler(async (req, res) => {
   return res.status(200).json({ message: "user details found", userDetails });
 });
 const updateUserDetails = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const { value, error } = userDetailsSchema.validate(req.body);
   if (error) {
     throw AppError.validation(error.details[0].message);

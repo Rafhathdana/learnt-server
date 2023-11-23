@@ -32,7 +32,6 @@ const checkIsBlocked = async (email) => {
   return Admin.isBlocked;
 };
 const createAdmin = ({ name, password, phone, email, adminname }) => {
-  console.log(adminname);
   const admin = new Admin({
     name,
     email,

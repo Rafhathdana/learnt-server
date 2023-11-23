@@ -14,8 +14,6 @@ const uploaded = async (course, thumbnail) => {
     const courseTitleWithoutSpaces = course.title.trim().replace(/ /g, "-");
     const extension = thumbnail.mimetype.split("/")[1];
     const fileName = `thumbnail/${courseTitleWithoutSpaces}-${uniqueSuffix}.${extension}`;
-    console.log(fileName, "edwxsacewx");
-    console.log(thumbnail, "edwxsacewxrewsafr3ewdsa");
     const uploadResponse = await cloudinary.uploader.upload(thumbnail.path);
 
     console.log(

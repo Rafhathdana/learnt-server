@@ -2,9 +2,13 @@ const { StatusCodes, ReasonPhrases } = require("http-status-codes");
 const errorCodes = require("../errors/error.codes");
 /**
  * @desc To throw an error that is not defined
- * @usage throw new AppError (1001,'This is an error message',419)
- * @desc To throw an error that is defined
- * @usage throw AppError.validation('This is an error message')
+* @usage ```js
+ * throw new AppError (1001,'This is an error message',419)
+ * ```
+ * * @desc To throw an error that is defined
+ * @usage ```js 
+ * throw AppError.validation('This is an error message')
+ * ``` 
  */
 
 class AppError extends Error {
@@ -30,9 +34,9 @@ class AppError extends Error {
    */
   static validation(message = ReasonPhrases.BAD_REQUEST) {
     return new AppError(
-      errorCodes.VALIDATION_ERROR,
+      errorCodes?.VALIDATION_ERROR,
       message,
-      StatusCodes.BAD_REQUEST
+      StatusCodes?.BAD_REQUEST
     );
   }
   static authentication(message = ReasonPhrases.UNAUTHORIZED) {
@@ -44,9 +48,9 @@ class AppError extends Error {
   }
   static forbidden(message = ReasonPhrases.FORBIDDEN) {
     return new AppError(
-      errorCodes.FORBIDDEN_ERROR,
+      errorCodes?.FORBIDDEN_ERROR,
       message,
-      StatusCodes.FORBIDDEN
+      StatusCodes?.FORBIDDEN
     );
   }
   static conflict(message = ReasonPhrases.CONFLICT) {
@@ -54,18 +58,18 @@ class AppError extends Error {
   }
   static database(message = ReasonPhrases.INTERNAL_SERVER_ERROR) {
     return new AppError(
-      errorCodes.DATABASE_ERROR,
+      errorCodes?.DATABASE_ERROR,
       message,
-      StatusCodes.INTERNAL_SERVER_ERROR
+      StatusCodes?.INTERNAL_SERVER_ERROR
     );
   }
   static order(
     message = "An unexpected error occured while processing your order"
   ) {
     return new AppError(
-      errorCodes.ORDER_ERROR,
+      errorCodes?.ORDER_ERROR,
       message,
-      StatusCodes.INTERNAL_SERVER_ERROR
+      StatusCodes?.INTERNAL_SERVER_ERROR
     );
   }
 
@@ -73,9 +77,9 @@ class AppError extends Error {
     message = "An unexpected error occured while processing your transaction"
   ) {
     return new AppError(
-      errorCodes.TRANSACTION_ERROR,
+      errorCodes?.TRANSACTION_ERROR,
       message,
-      StatusCodes.INTERNAL_SERVER_ERROR
+      StatusCodes?.INTERNAL_SERVER_ERROR
     );
   }
 

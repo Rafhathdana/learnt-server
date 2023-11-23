@@ -25,8 +25,6 @@ const handleSignIn = asyncHandler(async (req, res) => {
   }
   const { tutorData, accessTokenTutor, refreshTokenTutor } =
     await tutorService.handleSignIn(value);
-  console.log(accessTokenTutor, "fdvc");
-  console.log(refreshTokenTutor, "fdvc");
   attachTokenToCookie("accessTokenTutor", accessTokenTutor, res);
   attachTokenToCookie("refreshTokenTutor", refreshTokenTutor, res);
   res.status(200).json({ message: "Login successfull", tutor: tutorData });

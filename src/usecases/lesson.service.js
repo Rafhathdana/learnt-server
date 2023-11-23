@@ -29,7 +29,6 @@ const getLesson = async (lessonId) => {
   lesson = lesson.toObject();
   lesson.videoFormat = lesson.videoKey.split(".")[1];
   lesson.videoURL = await bucketService.getVideoURL(lesson.videoKey);
-  console.log(lesson);
   return lesson;
 };
 module.exports = { addLessonToCourse, getLesson };

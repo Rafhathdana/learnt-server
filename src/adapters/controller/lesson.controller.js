@@ -10,7 +10,6 @@ const addLessonToCourse = async (req, res) => {
     tutor: req.tutor,
   };
 
-  console.log(value);
   const lessonData = await lessonService.addLessonToCourse(lesson);
   res.status(200).json({ message: "lesson added successfully" });
 };

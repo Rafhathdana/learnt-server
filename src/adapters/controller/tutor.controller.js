@@ -25,7 +25,6 @@ const getTutorDetails = asyncHandler(async (req, res) => {
   return res.status(200).json({ message: "tutor details found", tutorDetails });
 });
 const updateTutorDetails = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const { value, error } = tutorDetailsSchema.validate(req.body);
   if (error) {
     throw AppError.validation(error.details[0].message);

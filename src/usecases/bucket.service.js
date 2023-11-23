@@ -31,12 +31,10 @@ const attachThumbnailURLToCourses = async (courses) => {
   return courses;
 };
 const uploadThumbnailToBucket = async (course, thumbnail) => {
-  console.log("fvdhxsn");
   const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
   const courseTitleWithoutSpaces = course.title.trim().replace(/ /g, "-");
   const extension = thumbnail.mimetype.split("/")[1];
   const fileName = `thumbnail/${courseTitleWithoutSpaces}-${uniqueSuffix}.${extension}`;
-  console.log(fileName);
   const params = {
     Bucket: bucketName,
     Key: fileName,
@@ -107,7 +105,6 @@ const uploadLesson = async (lesson) => {
     },
   };
 
-  console.log(params);
 
   const command = new PutObjectCommand(params);
 

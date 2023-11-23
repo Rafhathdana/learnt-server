@@ -8,8 +8,6 @@ const createOrder = asyncHandler(async (req, res) => {
     courseId: req.body.courseId,
     user: req.user.name,
   });
-  console.log("brvfecdsxa");
-  console.log(response);
 
   res.status(200).json({
     message: "Order created successfully",
