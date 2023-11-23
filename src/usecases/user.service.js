@@ -110,7 +110,7 @@ const handleSignUpOtp = async ({ email, phone }) => {
     return user;
   }
 };
-const handleGoogleSignIn = async (token) => {
+const handleFirebaseSignIn = async (token) => {
   const { email } = await firbaseService.verifyToken(token);
 
   const user = await userRepository.findUserByEmail(email);
@@ -223,5 +223,5 @@ module.exports = {
   updateUserDetails,
   getEnrolledStudentsCount,
   isEnrolledForCourse,
-  handleGoogleSignIn,
+  handleFirebaseSignIn,
 };

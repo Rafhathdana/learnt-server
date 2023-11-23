@@ -13,7 +13,9 @@ router.route("/signup").post(authController.handleSignUp);
 router.route("/sendotp").post(authController.handleSignOtp);
 router.route("/user/restore").get(authController.restoreUserDetails);
 router.route("/token").get(authController.refreshToken);
-router.route("/signin/google/verify").post(authController.signInWithGoogle);
+router
+  .route("/signin/firebase/verify")
+  .post(authController.firebaseSignInVerify);
 router.route("/logout").delete(authController.handleLogout);
 
 /**

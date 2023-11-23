@@ -1,6 +1,6 @@
-const admin = require('../frameworks/config/firebase')
-const { getAuth } = require('firebase-admin/auth');
-const AppError = require('../utils/app.error.util');
+const admin = require("../frameworks/config/firebase");
+const { getAuth } = require("firebase-admin/auth");
+const AppError = require("../frameworks/web/utils/app.error.util");
 
 /**
  * Uses the Firebase Admin SDK to validate the ID token and obtain user information.
@@ -12,18 +12,32 @@ const AppError = require('../utils/app.error.util');
  *
  */
 const verifyToken = async (token) => {
-    return getAuth()
-        .verifyIdToken(token)
-        .then((decodedToken) => {
-            console.log(`Firebase google token verified for user: ${decodedToken.name}, ${decodedToken.email}`)
-            return decodedToken
-        })
-        .catch((error) => {
-            console.log('error while verify id token firebase ',error)
-            throw AppError.validation(error.message)
-        });
-}
+  return getAuth()
+    .verifyIdToken(token)
+    .then(async (decodedToken) => {
+      // if email is null in decoded token then get user details using Firebase User id
+      if (!decodedToken?.email) {
+        const firebaseUserData = await getAuth().getUser(decodedToken.uid);
+        console.log(
+          `Firebase ${decodedToken?.firebase.sign_in_provider} token verified for user: ${decodedToken.name}, ${firebaseUserData.providerData[0].email}`
+        );
+        return {
+          ...decodedToken,
+          email: firebaseUserData.providerData[0].email,
+        };
+      }
+
+      console.log(
+        `Firebase ${decodedToken?.firebase.sign_in_provider} token verified for user: ${decodedToken.name}, ${decodedToken.email}`
+      );
+      return decodedToken;
+    })
+    .catch((error) => {
+      console.log("error while verify id token firebase ", error);
+      throw AppError.validation(error.message);
+    });
+};
 
 module.exports = {
-    verifyToken
-}
+  verifyToken,
+};

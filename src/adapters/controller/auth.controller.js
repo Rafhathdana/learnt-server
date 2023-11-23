@@ -33,11 +33,11 @@ const handleSignIn = asyncHandler(async (req, res) => {
   console.log("user login successful.user is ", user.name);
   res.status(200).json({ message: "Login successfull", user });
 });
-const signInWithGoogle = asyncHandler(async (req, res) => {
+const firebaseSignInVerify = asyncHandler(async (req, res) => {
   const { token } = req.body;
-
+  console.log(token);
   const { user, accessToken, refreshToken } =
-    await userService.handleGoogleSignIn(token);
+    await userService.handleFirebaseSignIn(token);
 
   attachTokenToCookie("accessToken", accessToken, res);
   attachTokenToCookie("refreshToken", refreshToken, res);
@@ -126,5 +126,5 @@ module.exports = {
   restoreUserDetails,
   refreshToken,
   handleLogout,
-  signInWithGoogle,
+  firebaseSignInVerify,
 };
